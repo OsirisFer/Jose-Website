@@ -1,0 +1,133 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 1.5rem 0;
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+.scrolled {
+    background-color: rgba(253, 252, 248, 0.95);
+    /* var(--background) with opacity */
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* Soft shadow */
+    backdrop-filter: blur(10px);
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    font-family: 'Young Serif', serif;
+    font-size: 1.5rem;
+    color: var(--deep-text);
+    text-decoration: none;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.navList {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.navLink {
+    text-decoration: none;
+    color: var(--deep-text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    transition: color 0.2s;
+    font-size: 0.95rem;
+}
+
+.navLink:hover {
+    color: var(--peach-accent);
+}
+
+.bookBtn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+}
+
+.bar {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--deep-text);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    transform-origin: 1px;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        background-color: var(--soft-beige);
+        padding-top: 6rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobileOpen {
+        transform: translateX(0);
+    }
+
+    .navList {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 2rem;
+        gap: 2rem;
+    }
+
+    .navLink {
+        font-size: 1.25rem;
+    }
+
+    /* Hamburger Animation */
+    .bar.open:nth-child(1) {
+        transform: rotate(45deg);
+    }
+
+    .bar.open:nth-child(2) {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    .bar.open:nth-child(3) {
+        transform: rotate(-45deg);
+    }
+}

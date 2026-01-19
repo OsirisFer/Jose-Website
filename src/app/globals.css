@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Young+Serif&display=swap');
+
+:root {
+  --background: #fdfcf8;
+  --foreground: #4a4a4a;
+  
+  /* Brand Colors */
+  --soft-beige: #f5f0eb;
+  --warm-peach: #e8d5c4;
+  --peach-accent: #d4b8a0;
+  --deep-text: #2c2420;
+  
+  /* UI Colors */
+  --button-bg: #2c2420;
+  --button-text: #ffffff;
+  --error: #e74c3c;
+  --success: #27ae60;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif; /* Fallback/Body */
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Young Serif', serif;
+  color: var(--deep-text);
+  font-weight: normal;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Utilities */
+.btn-primary {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px; /* Pillow shape for softness */
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.section-padding {
+  padding: 4rem 0;
+}

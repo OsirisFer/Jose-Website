@@ -1,0 +1,101 @@
+.booking {
+    background-color: #faf8f5;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: var(--deep-text);
+}
+
+.wizard {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.dateInput {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+}
+
+.slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+.slotBtn {
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.slotBtn:hover {
+    border-color: var(--peach-accent);
+}
+
+.active {
+    background-color: var(--button-bg);
+    color: #fff;
+    border-color: var(--button-bg);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.input {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.backBtn {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    color: #666;
+}
+
+.success {
+    text-align: center;
+    padding: 2rem;
+}
+
+.checkmark {
+    font-size: 4rem;
+    color: var(--success);
+    margin-bottom: 1rem;
+}
