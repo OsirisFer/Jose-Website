@@ -4,7 +4,7 @@ import Profile from '@/components/Profile';
 import Services from '@/components/Services';
 import TherapeuticApproach from '@/components/TherapeuticApproach';
 import Contact from '@/components/Contact';
-import BookingWizard from '@/components/Booking/BookingWizard';
+import BookingChoice from '@/components/Booking/BookingChoice';
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       <div id="profile"><Profile /></div>
       <div id="services"><Services /></div>
       <div id="approach"><TherapeuticApproach /></div>
-      <BookingWizard /> {/* Already has #book internal ID if needed, or we wrap it */}
+      <BookingChoice />
       <div id="contact"><Contact /></div>
     </main>
   );

@@ -1,8 +1,15 @@
 // Client-side Booking Service
 
-export const getAvailableSlots = async (date) => {
+export const getAvailableSlots = async (date, patientCode) => {
     try {
-        const res = await fetch(`/api/availability?date=${date}`);
+        const res = await fetch(`/api/availability?date=${date}`, {
+            headers: {
+                'x-patient-code': patientCode || ''
+            }
+        });
+        if (res.status === 401 || res.status === 403) {
+            throw new Error('Unauthorized');
+        }
         if (!res.ok) throw new Error('Failed to fetch availability');
 
         const slots = await res.json();
@@ -13,12 +20,17 @@ export const getAvailableSlots = async (date) => {
     }
 };
 
-export const bookAppointment = async (details) => {
+export const bookAppointment = async (details, patientCode) => {
     try {
+        const payload = {
+            ...details,
+            patientCode
+        };
+
         const res = await fetch('/api/book', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(details),
+            body: JSON.stringify(payload),
         });
 
         if (!res.ok) {

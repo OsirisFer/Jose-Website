@@ -3,6 +3,42 @@ import { google } from "googleapis";
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
+function getPrivateKey() {
+    const rawKey = process.env.GOOGLE_PRIVATE_KEY;
+    if (!rawKey) throw new Error("Missing GOOGLE_PRIVATE_KEY");
+
+    // 1. Remove surrounding quotes if they exist (sometimes dotenv leaves them if multiple)
+    let key = rawKey.replace(/^"|"$/g, "");
+
+    // 2. Convert literal \n to real newlines
+    key = key.replace(/\\n/g, "\n");
+
+    // Debuging: Check first line
+    const firstLine = key.split('\n')[0];
+    console.log("DEBUG KEY:", {
+        startsCorrectly: firstLine.includes("BEGIN PRIVATE KEY"),
+        totalLength: key.length,
+        hasNewlines: key.includes('\n'),
+        firstLine: firstLine.substring(0, 20) + "..."
+    });
+
+    return key;
+}
+
+export async function getAuthClient(scopes = SCOPES) {
+    const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+    if (!email) throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_EMAIL");
+
+    const private_key = getPrivateKey();
+
+    const auth = new google.auth.GoogleAuth({
+        credentials: { client_email: email, private_key },
+        scopes,
+    });
+
+    return await auth.getClient();
+}
+
 export async function getCalendarService() {
     const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
     const rawKey = process.env.GOOGLE_PRIVATE_KEY;
