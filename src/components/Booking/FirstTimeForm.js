@@ -58,6 +58,7 @@ export default function FirstTimeForm({ onBack }) {
                     placeholder="Tu nombre"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className={styles.input}
                 />
             </div>
 
@@ -68,6 +69,7 @@ export default function FirstTimeForm({ onBack }) {
                     placeholder="tucorreo@ejemplo.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className={styles.input}
                 />
             </div>
 
@@ -78,6 +80,7 @@ export default function FirstTimeForm({ onBack }) {
                     placeholder="Número de contacto"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className={styles.input}
                 />
             </div>
 
