@@ -5,6 +5,8 @@ import Services from '@/components/Services';
 import TherapeuticApproach from '@/components/TherapeuticApproach';
 import Contact from '@/components/Contact';
 import BookingChoice from '@/components/Booking/BookingChoice';
+import ImmediateHelp from '@/components/ImmediateHelp';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -19,6 +21,8 @@ export default function Home() {
         whatsappMessage={process.env.WHATSAPP_PREFILL_MESSAGE}
       />
       <div id="contact"><Contact /></div>
+      <ImmediateHelp />
+      <Footer />
     </main>
   );
 }

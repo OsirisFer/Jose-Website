@@ -20,7 +20,7 @@ export async function GET(request) {
         return NextResponse.json({ error: 'Missing patient code' }, { status: 401 });
     }
     const isAuthorized = await validatePatientCode(patientCode);
-    if (!isAuthorized) {
+    if (!isAuthorized.valid) { // Note: validatePatientCode returns object now
         return NextResponse.json({ error: 'Invalid or inactive patient code' }, { status: 403 });
     }
 
@@ -29,10 +29,7 @@ export async function GET(request) {
     }
 
     // Configuration
-    const TIMEZONE = process.env.TIMEZONE || 'America/Montevideo';
     const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
-    const WORK_START = parseInt((process.env.WORK_START || '09:00').split(':')[0]); // 9
-    const WORK_END = parseInt((process.env.WORK_END || '18:00').split(':')[0]);     // 18
 
     if (!CALENDAR_ID) {
         console.warn('GOOGLE_CALENDAR_ID not set');
@@ -42,6 +39,11 @@ export async function GET(request) {
     try {
         const { calendar, auth } = await getCalendarService();
 
+        // Check patient status for duration
+        let durationMinutes = 60; // Default
+        if (!isAuthorized.firstInterviewDone) { // from validatePatientCode result
+            durationMinutes = 30;
+        }
 
         const startOfDay = new Date(`${dateParam}T00:00:00`);
         const endOfDay = new Date(`${dateParam}T23:59:59`);
@@ -54,40 +56,49 @@ export async function GET(request) {
             requestBody: {
                 timeMin,
                 timeMax,
-                timeZone: TIMEZONE,
                 items: [{ id: CALENDAR_ID }],
             },
         });
 
-
         const busySlots = response.data.calendars[CALENDAR_ID].busy;
         const availableSlots = [];
 
-        for (let hour = WORK_START; hour < WORK_END; hour++) {
-            const minutes = [0, 30];
+        // Generate slots
+        // If 30 min duration: :00 and :30 are valid start times.
+        // If 60 min duration: :00 and :30 are still valid start times.
+        // We use env vars for Work Start/End or defaults
+        const workStartStr = process.env.WORK_START || '09:00';
+        const workEndStr = process.env.WORK_END || '17:00';
 
-            for (let min of minutes) {
-                const slotStartStr = `${dateParam}T${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:00`;
-                const slotStartTime = new Date(slotStartStr);
-                let slotEndTime = new Date(slotStartTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+        const workStart = new Date(`${dateParam}T${workStartStr}:00`);
+        const workEnd = new Date(`${dateParam}T${workEndStr}:00`);
 
-                const workCloseTime = new Date(`${dateParam}T${WORK_END}:00:00`);
-                if (slotEndTime > workCloseTime) continue;
+        let currentSlot = new Date(workStart);
 
-                const isBusy = busySlots.some(busy => {
-                    const busyStart = new Date(busy.start);
-                    const busyEnd = new Date(busy.end);
-                    return (slotStartTime < busyEnd && slotEndTime > busyStart);
-                });
+        while (currentSlot < workEnd) {
+            // Check if slot + duration fits in work day
+            const slotEnd = new Date(currentSlot.getTime() + durationMinutes * 60000);
+            if (slotEnd > workEnd) break;
 
-                if (!isBusy) {
-                    const timeLabel = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
-                    availableSlots.push(timeLabel);
-                }
+            // Check overlap with busy slots
+            const isBusy = busySlots.some(busy => {
+                const busyStart = new Date(busy.start);
+                const busyEnd = new Date(busy.end);
+
+                // Overlap condition: (StartA < EndB) and (EndA > StartB)
+                return (currentSlot < busyEnd) && (slotEnd > busyStart);
+            });
+
+            if (!isBusy) {
+                // Return just the start time string HH:mm
+                availableSlots.push(currentSlot.toTimeString().slice(0, 5));
             }
+
+            // Increment by 30 mins always (slots start at :00 or :30)
+            currentSlot = new Date(currentSlot.getTime() + 30 * 60000);
         }
 
-        return NextResponse.json(availableSlots);
+        return NextResponse.json({ slots: availableSlots, duration: durationMinutes });
 
     } catch (error) {
         console.error('Calendar API Error:', error);

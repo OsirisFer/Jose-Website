@@ -1,0 +1,78 @@
+.section {
+    padding: 4rem 0;
+    background-color: #f8f9fa;
+    /* Very light subtle grey/white */
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.title {
+    font-size: 2rem;
+    color: var(--deep-text);
+    margin-bottom: 1rem;
+    font-family: var(--font-young-serif);
+}
+
+.disclaimer {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.resources {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 2rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 280px;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    border-color: var(--peach-accent);
+}
+
+.label {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.number {
+    font-size: 1.25rem;
+    color: var(--deep-text);
+    font-weight: 700;
+}
+
+.emergencyNote {
+    font-size: 0.9rem;
+    color: #999;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    .resources {
+        flex-direction: column;
+        align-items: center;
+    }
+}

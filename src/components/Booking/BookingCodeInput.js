@@ -21,7 +21,8 @@ export default function BookingCodeInput({ onValidCode, onBack }) {
             const data = await res.json();
 
             if (res.ok && data.valid) {
-                onValidCode(code);
+                // Pass pure code + status
+                onValidCode(code, data.firstInterviewDone);
             } else {
                 setError('Código inválido o inactivo. Intenta nuevamente.');
             }
@@ -48,7 +49,7 @@ export default function BookingCodeInput({ onValidCode, onBack }) {
                 {error && <p className={styles.error}>{error}</p>}
 
                 <div className={styles.buttons}>
-                    <button type="button" className={styles.backBtn} onClick={onBack}>Atrás</button>
+                    <button type="button" className={styles.textBtn} onClick={onBack}>✕ Cancelar</button>
                     <button type="submit" className="btn-primary" disabled={!code || loading}>
                         {loading ? 'Verificando...' : 'Continuar'}
                     </button>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import styles from './BookingWizard.module.css';
 import { getAvailableSlots, bookAppointment } from '@/lib/booking';
 
-export default function BookingWizard({ patientCode, onCancel }) {
+export default function BookingWizard({ patientCode, isFirstInterviewDone, onCancel }) {
     const [step, setStep] = useState(1);
     const [date, setDate] = useState('');
     const [slots, setSlots] = useState([]);
@@ -12,6 +12,8 @@ export default function BookingWizard({ patientCode, onCancel }) {
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', honeypot: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const sessionType = isFirstInterviewDone ? 'Sesión Standard (60 min)' : 'Primera Entrevista (30 min)';
 
     // Fetch slots when date changes
     useEffect(() => {
@@ -24,7 +26,7 @@ export default function BookingWizard({ patientCode, onCancel }) {
                     setError('Error al cargar turnos. Verifica tu código.');
                     setSlots([]);
                 } else {
-                    setSlots(data);
+                    setSlots(data.slots || data); // Handle object or array return
                 }
             }).catch(() => {
                 setLoading(false);
@@ -70,6 +72,10 @@ export default function BookingWizard({ patientCode, onCancel }) {
                         <h3>Paso 1: Elige un Horario</h3>
                         <button onClick={onCancel} className={styles.textBtn}>✕ Cancelar</button>
                     </div>
+
+                    <p style={{ marginBottom: '1rem', color: '#666', background: '#f5f5f5', padding: '0.5rem', borderRadius: '8px', fontSize: '0.9rem' }}>
+                        <strong>Tipo de turno:</strong> {sessionType}
+                    </p>
 
                     <div className={styles.controls}>
                         <label className={styles.label}>

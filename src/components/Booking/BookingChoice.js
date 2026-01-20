@@ -9,9 +9,12 @@ import styles from './BookingWizard.module.css';
 export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
     const [mode, setMode] = useState('LANDING'); // LANDING, FIRST_TIME, CODE_ENTRY, BOOKING
     const [patientCode, setPatientCode] = useState(null);
+    const [isFirstInterviewDone, setIsFirstInterviewDone] = useState(true);
 
-    const handlePatientCodeValid = (code) => {
+
+    const handlePatientCodeValid = (code, firstInterviewDone) => {
         setPatientCode(code);
+        setIsFirstInterviewDone(firstInterviewDone);
         setMode('BOOKING');
     };
 
@@ -72,6 +75,7 @@ export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
                     {mode === 'BOOKING' && (
                         <BookingWizard
                             patientCode={patientCode}
+                            isFirstInterviewDone={isFirstInterviewDone} // Pass prop
                             onCancel={() => {
                                 setMode('LANDING');
                                 setPatientCode(null);

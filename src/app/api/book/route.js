@@ -1,8 +1,62 @@
 import { NextResponse } from "next/server";
 import { getCalendarService } from "@/lib/google";
-import { validatePatientCode } from "@/lib/sheets";
+import { validatePatientCode, markFirstInterviewDone } from "@/lib/sheets";
 import { checkRateLimit, isBlacklisted } from "@/lib/security";
 import crypto from "crypto";
+import nodemailer from "nodemailer";
+
+// Helper to send confirmation email
+async function sendConfirmationEmail({ to, name, date, time, durationMinutes }) {
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || "587"),
+        secure: process.env.SMTP_PORT === "465",
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+        },
+    });
+
+    const formattedDate = new Date(`${date}T${time}:00`).toLocaleDateString('es-UY', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'America/Montevideo'
+    });
+
+    const sessionType = durationMinutes === 30 ? "Primera Entrevista (30 min)" : "Sesión (60 min)";
+
+    const htmlContent = `
+    <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fdfcf8;">
+        <h2 style="color: #2c2420;">¡Reserva Confirmada!</h2>
+        <p>Hola <strong>${name}</strong>,</p>
+        <p>Tu cita con la Lic. Josefina ha sido agendada correctamente.</p>
+        
+        <div style="background: #f5f0eb; padding: 20px; border-radius: 12px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0;"><strong>📅 Fecha:</strong> ${formattedDate}</p>
+            <p style="margin: 0 0 10px 0;"><strong>🕐 Hora:</strong> ${time} hs (Uruguay)</p>
+            <p style="margin: 0;"><strong>⏱️ Duración:</strong> ${sessionType}</p>
+        </div>
+        
+        <p style="font-size: 0.9rem; color: #666;">
+            Si necesitas cancelar o reprogramar tu cita, por favor comunícate con anticipación.
+        </p>
+        
+        <hr style="border: none; border-top: 1px solid #e8d5c4; margin: 20px 0;">
+        <p style="font-size: 0.85rem; color: #888;">
+            Este correo fue enviado automáticamente. Por favor no respondas a este mensaje.
+        </p>
+    </div>
+    `;
+
+    await transporter.sendMail({
+        from: `"Lic. Josefina" <${process.env.SMTP_USER}>`,
+        to: to,
+        subject: `Confirmación de Cita - ${formattedDate}`,
+        html: htmlContent,
+    });
+}
 
 export async function POST(request) {
     const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
@@ -26,10 +80,14 @@ export async function POST(request) {
         if (!patientCode) {
             return NextResponse.json({ error: "Missing patient code" }, { status: 401 });
         }
-        const isAuthorized = await validatePatientCode(patientCode);
-        if (!isAuthorized) {
+        const authStatus = await validatePatientCode(patientCode);
+        if (!authStatus.valid) {
             return NextResponse.json({ error: "Invalid or inactive patient code" }, { status: 403 });
         }
+
+        // Duration Check
+        const isFirstInterview = !authStatus.firstInterviewDone;
+        const durationMinutes = isFirstInterview ? 30 : 60;
 
         // Input validation
         if (!date || !time || !name || !email) {
@@ -51,7 +109,7 @@ export async function POST(request) {
 
         // Construct timestamps
         const startDateTime = new Date(`${date}T${time}:00`);
-        const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
+        const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000);
 
         // Double booking check
         const freebusy = await calendar.freebusy.query({
@@ -73,11 +131,12 @@ export async function POST(request) {
         const bookingId = crypto.randomUUID();
 
         const event = {
-            summary: `Sesión: ${name}`,
+            summary: isFirstInterview ? `Primera Entrevista: ${name}` : `Sesión: ${name}`,
             description: `
 <strong>Paciente:</strong> ${name}<br>
 <strong>Email:</strong> ${email}<br>
-<strong>Teléfono:</strong> ${phone || ""}<br><br>
+<strong>Teléfono:</strong> ${phone || ""}<br>
+<strong>Tipo:</strong> ${isFirstInterview ? "Primera Entrevista (30 min)" : "Sesión Standard (60 min)"}<br><br>
 Reserva realizada desde el sitio web.<br>
 Código Paciente: ${patientCode}
       `,
@@ -94,15 +153,40 @@ Código Paciente: ${patientCode}
                     bookingId,
                     source: "website_booking_wizard",
                     patientCode,
+                    type: isFirstInterview ? "first_interview" : "standard"
                 },
             },
         };
 
+        // Insert event (simple, no attendees)
         await calendar.events.insert({
             auth,
             calendarId: CALENDAR_ID,
             requestBody: event,
         });
+
+        // Update Sheet if it was first interview
+        if (isFirstInterview) {
+            try {
+                await markFirstInterviewDone(patientCode);
+            } catch (sheetError) {
+                console.error("Failed to update Sheet status:", sheetError);
+            }
+        }
+
+        // Send confirmation email (fail-soft)
+        try {
+            await sendConfirmationEmail({
+                to: email,
+                name,
+                date,
+                time,
+                durationMinutes
+            });
+        } catch (emailError) {
+            console.error("Failed to send confirmation email:", emailError);
+            // Do not fail the booking if email fails
+        }
 
         return NextResponse.json({ success: true, bookingId });
     } catch (error) {

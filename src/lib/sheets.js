@@ -2,8 +2,8 @@
 import { google } from "googleapis";
 import { getAuthClient } from "./google";
 
-const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
-const SHEETS_SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
+// Full access required to update cells
+const SHEETS_SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 
 let cache = { data: null, timestamp: 0 };
 const CACHE_TTL = 60 * 1000; // 60s
@@ -20,7 +20,8 @@ async function getPatientData() {
     }
 
     const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
-    const RANGE = process.env.GOOGLE_SHEETS_RANGE || "Patients!A:C";
+    // Assuming A=Code, B=Active, C=Notes, D=FirstInterviewDone
+    const RANGE = "Patients!A:D";
 
     if (!SHEET_ID) {
         throw new Error("GOOGLE_SHEETS_ID not set");
@@ -35,29 +36,73 @@ async function getPatientData() {
 
     const rows = response.data.values || [];
 
-    // Build: { "JF-001": true, "JF-002": false }
-    // Skip header row if it looks like one
-    const startIndex =
-        rows[0]?.[0]?.toLowerCase?.() === "code" ? 1 : 0;
+    // Detect start index (skip header if present)
+    const startIndex = rows[0]?.[0]?.toLowerCase?.() === "code" ? 1 : 0;
 
-    const patients = rows.slice(startIndex).reduce((acc, row) => {
-        const code = (row[0] || "").toString().trim();
+    const patients = {};
+
+    rows.slice(startIndex).forEach((row, index) => {
+        const code = (row[0] || "").toString().trim().toUpperCase();
+        if (!code) return;
+
+        // Parse Active
         const activeRaw = row[1];
+        const isActive = activeRaw === true || String(activeRaw).toUpperCase() === "TRUE";
 
-        const isActive =
-            activeRaw === true ||
-            String(activeRaw).toUpperCase() === "TRUE";
+        // Parse FirstInterviewDone (Column D)
+        const doneRaw = row[3];
+        const isDone = doneRaw === true || String(doneRaw).toUpperCase() === "TRUE";
 
-        if (code) acc[code] = isActive;
-        return acc;
-    }, {});
+        // Store rowIndex (absolute 1-based index for updating)
+        // index is 0-based from slice, so actual row = startIndex + index + 1
+        const absoluteRow = startIndex + index + 1;
+
+        patients[code] = {
+            active: isActive,
+            firstInterviewDone: isDone,
+            rowIndex: absoluteRow
+        };
+    });
 
     cache = { data: patients, timestamp: now };
     return patients;
 }
 
 export async function validatePatientCode(code) {
-    if (!code) return false;
+    if (!code) return { valid: false };
     const patients = await getPatientData();
-    return patients[String(code).trim()] === true;
+    const data = patients[String(code).trim().toUpperCase()];
+
+    if (!data || !data.active) return { valid: false };
+
+    return {
+        valid: true,
+        firstInterviewDone: data.firstInterviewDone
+    };
+}
+
+export async function markFirstInterviewDone(code) {
+    if (!code) return;
+    const patients = await getPatientData();
+    const data = patients[String(code).trim().toUpperCase()];
+
+    if (!data) return; // Code not found
+
+    const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
+    const sheets = await getSheetsClient();
+
+    // Update Column D at the specific row
+    const range = `Patients!D${data.rowIndex}`;
+
+    await sheets.spreadsheets.values.update({
+        spreadsheetId: SHEET_ID,
+        range: range,
+        valueInputOption: "RAW",
+        requestBody: {
+            values: [["TRUE"]]
+        }
+    });
+
+    // Invalidate cache immediately so next read sees the update
+    cache = { data: null, timestamp: 0 };
 }

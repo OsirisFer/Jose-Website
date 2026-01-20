@@ -79,6 +79,21 @@
     margin-top: 1.5rem;
 }
 
+.textBtn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s;
+}
+
+.textBtn:hover {
+    color: var(--deep-text);
+    text-decoration: underline;
+}
+
 /* Unified Input Styles */
 .input,
 .textarea {
