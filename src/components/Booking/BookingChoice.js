@@ -6,7 +6,7 @@ import FirstTimeForm from './FirstTimeForm';
 import BookingCodeInput from './BookingCodeInput';
 import styles from './BookingWizard.module.css';
 
-export default function BookingChoice() {
+export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
     const [mode, setMode] = useState('LANDING'); // LANDING, FIRST_TIME, CODE_ENTRY, BOOKING
     const [patientCode, setPatientCode] = useState(null);
 
@@ -53,7 +53,11 @@ export default function BookingChoice() {
 
                     {/* FIRST TIME FLOW */}
                     {mode === 'FIRST_TIME' && (
-                        <FirstTimeForm onBack={() => setMode('LANDING')} />
+                        <FirstTimeForm
+                            onBack={() => setMode('LANDING')}
+                            whatsappNumber={whatsappNumber}
+                            whatsappMessage={whatsappMessage}
+                        />
                     )}
 
                     {/* EXISTING PATIENT: CODE ENTRY */}

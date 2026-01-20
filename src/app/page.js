@@ -14,7 +14,10 @@ export default function Home() {
       <div id="profile"><Profile /></div>
       <div id="services"><Services /></div>
       <div id="approach"><TherapeuticApproach /></div>
-      <BookingChoice />
+      <BookingChoice
+        whatsappNumber={process.env.WHATSAPP_PHONE_E164}
+        whatsappMessage={process.env.WHATSAPP_PREFILL_MESSAGE}
+      />
       <div id="contact"><Contact /></div>
     </main>
   );
