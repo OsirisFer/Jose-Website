@@ -12,7 +12,7 @@ export default function Contact() {
                     </div>
                     <div className={styles.info}>
                         <h3>Contacto</h3>
-                        <p>Email: josefina@ejemplo.com<br />Teléfono: (555) 123-4567</p>
+                        <p>Email: majogdrd@gmail.com <br />Teléfono: (555) 123-4567</p>
                     </div>
                 </div>
             </div>
