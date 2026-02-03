@@ -7,12 +7,12 @@ export default function Hero() {
             <div className={`container ${styles.content}`}>
                 <div className={styles.textContent}>
                     <h1 className={styles.title}>
-                        Encuentra Equilibrio y Claridad con <span className={styles.highlight}>Josefina</span>
+                        Un espacio seguro creado para ti <br></br><span className={styles.highlight}>  Psicología Clínica Integral</span>
                     </h1>
-                    <p className={styles.subtitle}>
-                        Psicóloga licenciada dedicada a tu bienestar emocional.
-                        Un espacio seguro para el crecimiento, la sanación y el autodescubrimiento.
-                    </p>
+                    {/* <p className={styles.subtitle}>
+                        Lic. Josefina García da Rosa
+
+                    </p> */}
                     <div className={styles.actions}>
                         <a href="#book" className="btn-primary">Reservar turno</a>
                         <a href="#services" className={styles.learnMore}>Conocer mi enfoque</a>

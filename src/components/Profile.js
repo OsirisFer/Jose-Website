@@ -8,10 +8,14 @@ export default function Profile() {
                     <div className={styles.bio}>
                         <h2 className={styles.heading}>Sobre Josefina</h2>
                         <p className={styles.text}>
-                            Como psicóloga licenciada con más de 10 años de experiencia, me dedico a ayudar a las personas a navegar los desafíos de la vida con resiliencia y empatía. Mi práctica se basa en la escucha activa, técnicas basadas en evidencia y un profundo respeto por el camino único de cada persona.
-                        </p>
-                        <p className={styles.text}>
+                            Licenciada en Psicología desde un enfoque clínico integral.
+                            <br></br>
+                            Como psicóloga, crear un espacio seguro y cercano es primordial, por eso, he creado este espacio para ti.
+                            <br></br>
+                            Mi trabajo se centra en acompañar procesos de autoconocimiento, gestión emocional y búsqueda de bienestar.
+                            <br></br>
                             Creo que la terapia es un proceso colaborativo. Juntos, trabajamos para descubrir los patrones que ya no te sirven y construir nuevos caminos hacia una vida más auténtica y plena.
+
                         </p>
                         <div className={styles.credentials}>
                             <div>
@@ -31,7 +35,11 @@ export default function Profile() {
                     <div className={styles.philosophy}>
                         <h3 className={styles.subHeading}>Mi Filosofía</h3>
                         <blockquote className={styles.quote}>
-                            "Sanar no se trata de convertirte en alguien más, sino de dejar de ser todo lo que no eres realmente."
+                            "La psicoterapia es un espacio construído por la escucha, la reflexión y el compromiso por el cambio.
+                            Un lugar en donde cada individuo es acompañado desde una mirada integral y respetuosa desde la singularidad.
+                            Porque cada proceso es único y merece ser acompañado desde el cuidado y el respeto, priorizando siempre el bienestar y enfatizando la salud mental."
+
+
                         </blockquote>
                     </div>
                 </div>
