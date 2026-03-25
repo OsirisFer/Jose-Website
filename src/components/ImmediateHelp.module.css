@@ -1,25 +1,24 @@
 .section {
     padding: 4rem 0;
-    background-color: #f8f9fa;
-    /* Very light subtle grey/white */
+    background-color: var(--soft-beige);
     text-align: center;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--warm-peach);
 }
 
 .title {
     font-size: 2rem;
     color: var(--deep-text);
     margin-bottom: 1rem;
-    font-family: var(--font-young-serif);
 }
 
 .disclaimer {
     font-size: 1.1rem;
-    color: #666;
+    color: var(--foreground);
     margin-bottom: 2rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Inter', sans-serif;
 }
 
 .resources {
@@ -34,40 +33,43 @@
     display: flex;
     flex-direction: column;
     padding: 1.5rem 2rem;
-    background: #fff;
-    border: 1px solid #e0e0e0;
+    background: var(--background);
+    border: 1px solid var(--warm-peach);
     border-radius: 12px;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     min-width: 280px;
 }
 
 .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    border-color: var(--peach-accent);
+    box-shadow: 0 10px 24px rgba(196, 121, 95, 0.1);
+    border-color: var(--salmon-light);
 }
 
 .label {
     font-size: 0.9rem;
-    color: #888;
+    color: var(--logo-gray);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 500;
+    font-family: 'Inter', sans-serif;
 }
 
 .number {
     font-size: 1.25rem;
     color: var(--deep-text);
     font-weight: 700;
+    font-family: 'Inter', sans-serif;
 }
 
 .emergencyNote {
     font-size: 0.9rem;
-    color: #999;
+    color: var(--logo-gray);
     max-width: 500px;
     margin: 0 auto;
+    font-family: 'Inter', sans-serif;
 }
 
 @media (max-width: 600px) {

@@ -1,0 +1,298 @@
+/* ═══════════════════════════════════════════════════════════════
+   AnimatedLogo — GdRD layered logo
+   Positions are % of the container (aspect-ratio 1610/1666).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Container ──────────────────────────────────────────────── */
+.logo {
+  position: relative;
+  aspect-ratio: 1610 / 1666;
+}
+
+/* Neutralize global img rules that misalign absolute layers */
+.logo img {
+  position: absolute;
+  max-width: none;
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* ── Static layers ──────────────────────────────────────────── */
+.beigebg {
+  left: 35.217%;
+  top: 18.367%;
+  width: 28.261%;
+  height: 67.707%;
+  z-index: 0;
+}
+
+.textGdrd {
+  left: 29.379%;
+  top: 69.268%;
+  width: 38.944%;
+  height: 11.044%;
+  z-index: 3;
+}
+
+/* ── Wings wrapper (float host) ─────────────────────────────── */
+.wingsWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: transform 0.8s ease-out;
+}
+
+.floating {
+  animation: float 4s ease-in-out infinite;
+  transition: none;
+}
+
+/* ── Wing layers ────────────────────────────────────────────── */
+.wing {
+  position: absolute;
+  transition: transform 0.6s ease-out;
+}
+
+.leftWing {
+  left: 19.876%;
+  top: 18.247%;
+  width: 32.298%;
+  height: 67.887%;
+  transform-origin: 94% 35%;
+  z-index: 1;
+}
+
+.rightWing {
+  left: 47.267%;
+  top: 18.247%;
+  width: 31.242%;
+  height: 67.827%;
+  transform-origin: 6% 35%;
+  z-index: 1;
+}
+
+/* Standalone flap classes — used by parallax (JS-toggled) */
+.flapLeft {
+  animation: flapLeft 2.2s ease-in-out infinite;
+  transition: none;
+}
+
+.flapRight {
+  animation: flapRight 2.2s ease-in-out infinite;
+  transition: none;
+}
+
+/* ── Centered mode: shift wings+jdot down 8.763% when text is hidden ── */
+/* Equalizes top/bottom space within the beige_bg rectangle            */
+.centeredMode .leftWing {
+  top: 27.010%;
+}
+.centeredMode .rightWing {
+  top: 27.010%;
+}
+.centeredMode .jdot {
+  top: 43.277%;
+}
+
+/* ── jdot — floats with wrapper, never flaps ────────────────── */
+.jdot {
+  left: 42.422%;
+  top: 34.514%;
+  width: 9.876%;
+  height: 34.154%;
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes flapLeft {
+  0%   { transform: perspective(600px) rotateY(0deg); }
+  12%  { transform: perspective(600px) rotateY(50deg); }
+  28%  { transform: perspective(600px) rotateY(-5deg); }
+  42%  { transform: perspective(600px) rotateY(35deg); }
+  58%  { transform: perspective(600px) rotateY(-3deg); }
+  72%  { transform: perspective(600px) rotateY(20deg); }
+  100% { transform: perspective(600px) rotateY(0deg); }
+}
+
+@keyframes flapRight {
+  0%   { transform: perspective(600px) rotateY(0deg); }
+  12%  { transform: perspective(600px) rotateY(-50deg); }
+  28%  { transform: perspective(600px) rotateY(5deg); }
+  42%  { transform: perspective(600px) rotateY(-35deg); }
+  58%  { transform: perspective(600px) rotateY(3deg); }
+  72%  { transform: perspective(600px) rotateY(-20deg); }
+  100% { transform: perspective(600px) rotateY(0deg); }
+}
+
+@keyframes float {
+  0%,  100% { transform: translateY(0px)    rotate(-0.7deg); }
+  50%        { transform: translateY(-10px)  rotate(0.7deg);  }
+}
+
+/* Ambient flap: rests 70% of cycle, flaps in last 30% (~2.1 s of 7 s) */
+@keyframes ambientFlapLeft {
+  0%, 70%   { transform: perspective(600px) rotateY(0deg);  }
+  73.6%     { transform: perspective(600px) rotateY(50deg); }
+  77.6%     { transform: perspective(600px) rotateY(-5deg); }
+  81%       { transform: perspective(600px) rotateY(35deg); }
+  84.5%     { transform: perspective(600px) rotateY(-3deg); }
+  87.7%     { transform: perspective(600px) rotateY(20deg); }
+  91%, 100% { transform: perspective(600px) rotateY(0deg);  }
+}
+
+@keyframes ambientFlapRight {
+  0%, 70%   { transform: perspective(600px) rotateY(0deg);   }
+  73.6%     { transform: perspective(600px) rotateY(-50deg); }
+  77.6%     { transform: perspective(600px) rotateY(5deg);   }
+  81%       { transform: perspective(600px) rotateY(-35deg); }
+  84.5%     { transform: perspective(600px) rotateY(3deg);   }
+  87.7%     { transform: perspective(600px) rotateY(-20deg); }
+  91%, 100% { transform: perspective(600px) rotateY(0deg);   }
+}
+
+@keyframes ambientFloat {
+  0%,  100% { transform: translateY(0px)  rotate(-0.35deg); }
+  50%        { transform: translateY(-5px) rotate(0.35deg);  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE: HERO
+   ═══════════════════════════════════════════════════════════════ */
+.mode_hero {
+  opacity: 0;
+  transition: opacity 0.7s ease-out;
+}
+
+.mode_hero.state_revealed {
+  opacity: 1;
+}
+
+.mode_hero.state_revealed .wingsWrapper {
+  animation: float 4s ease-in-out 0.2s infinite;
+  transition: none;
+}
+
+/* 'both' = backwards (hold 0° during delay) + forwards (freeze after 3 cycles) */
+.mode_hero.state_revealed .leftWing {
+  animation: flapLeft 2.2s ease-in-out 0.4s 3 both;
+  transition: none;
+}
+
+.mode_hero.state_revealed .rightWing {
+  animation: flapRight 2.2s ease-in-out 0.4s 3 both;
+  transition: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE: NAVBAR
+   Quiet at rest. On hover: float + infinite flap.
+   On leave: .wing transition smoothly returns wings to 0°.
+   ═══════════════════════════════════════════════════════════════ */
+.mode_navbar {
+  cursor: pointer;
+}
+
+.mode_navbar.state_hovering .wingsWrapper {
+  animation: float 4s ease-in-out infinite;
+  transition: none;
+}
+
+.mode_navbar.state_hovering .leftWing {
+  animation: flapLeft 2.2s ease-in-out infinite;
+  transition: none;
+}
+
+.mode_navbar.state_hovering .rightWing {
+  animation: flapRight 2.2s ease-in-out infinite;
+  transition: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE: AMBIENT — fixed, fullscreen watermark
+   ═══════════════════════════════════════════════════════════════ */
+.mode_ambient {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vmin;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mode_ambient .wingsWrapper {
+  animation: ambientFloat 8s ease-in-out infinite;
+  transition: none;
+}
+
+.mode_ambient .leftWing {
+  animation: ambientFlapLeft 7s ease-in-out infinite;
+  transition: none;
+}
+
+.mode_ambient .rightWing {
+  animation: ambientFlapRight 7s ease-in-out 0.15s infinite;
+  transition: none;
+}
+
+@media (max-width: 768px) {
+  .mode_ambient {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE: SECTION-AMBIENT — absolute watermark inside a section
+   Parent must have position: relative; overflow: hidden
+   ═══════════════════════════════════════════════════════════════ */
+.mode_section_ambient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 340px;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mode_section_ambient .wingsWrapper {
+  animation: ambientFloat 8s ease-in-out infinite;
+  transition: none;
+}
+
+.mode_section_ambient .leftWing {
+  animation: ambientFlapLeft 7s ease-in-out infinite;
+  transition: none;
+}
+
+.mode_section_ambient .rightWing {
+  animation: ambientFlapRight 7s ease-in-out 0.15s infinite;
+  transition: none;
+}
+
+@media (max-width: 768px) {
+  .mode_section_ambient {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE: PARALLAX
+   JS applies translateY via inline style. Wings flap via .flapLeft
+   ═══════════════════════════════════════════════════════════════ */
+.mode_parallax {
+  will-change: transform;
+}
+
+@media (max-width: 768px) {
+  .mode_parallax {
+    will-change: auto;
+  }
+}

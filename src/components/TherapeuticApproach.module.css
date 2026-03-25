@@ -1,5 +1,5 @@
 .approach {
-    background-color: #fff;
+    background-color: var(--soft-beige);
     text-align: center;
 }
 
@@ -15,10 +15,16 @@
 }
 
 .text {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     line-height: 1.8;
     margin-bottom: 2rem;
-    color: #555;
+    color: var(--foreground);
+    font-family: 'Inter', sans-serif;
+}
+
+.text strong {
+    color: var(--deep-text);
+    font-weight: 600;
 }
 
 .tags {
@@ -30,13 +36,14 @@
 }
 
 .tag {
-    background-color: var(--soft-beige);
-    color: var(--deep-text);
+    background-color: var(--background);
+    color: var(--logo-gray);
     padding: 0.5rem 1.5rem;
     border-radius: 50px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-family: 'Inter', sans-serif;
+    border: 1px solid var(--warm-peach);
 }

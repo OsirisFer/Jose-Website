@@ -1,7 +1,7 @@
 .footer {
     padding: 3rem 0;
-    background-color: #fff;
-    border-top: 1px solid #f0f0f0;
+    background-color: var(--soft-beige);
+    border-top: 1px solid var(--warm-peach);
 }
 
 .container {
@@ -23,19 +23,22 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background-color: var(--soft-beige);
-    color: var(--deep-text);
+    background-color: var(--background);
+    color: var(--logo-gray);
+    border: 1px solid var(--warm-peach);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .socialLink:hover {
-    background-color: var(--peach-accent);
+    background-color: var(--salmon);
     color: #fff;
-    transform: translateY(-5px) scale(1.1);
+    border-color: var(--salmon);
+    transform: translateY(-4px) scale(1.08);
 }
 
 .copyright {
     font-size: 0.9rem;
-    color: #888;
+    color: var(--logo-gray);
     text-align: center;
+    font-family: 'Inter', sans-serif;
 }

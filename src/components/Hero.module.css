@@ -1,104 +1,86 @@
 .hero {
-    background-color: var(--soft-beige);
-    padding: 6rem 0;
+    background-color: var(--background);
+    padding: 5rem 0 2rem;
     display: flex;
     align-items: center;
-    min-height: 80vh;
+    min-height: auto;
 }
 
 .content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
+    gap: 0;
 }
 
-.textContent {
-    max-width: 600px;
+/* Logo wrapper — no overflow:hidden so wings breathe freely */
+.logoWrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -1rem;
+}
+
+.heroLogo {
+    width: clamp(520px, 62vw, 800px);
+}
+
+.textBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    max-width: 640px;
+    margin-top: -2rem;
 }
 
 .title {
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 4.5vw, 3.75rem);
     line-height: 1.2;
-    margin-bottom: 1.5rem;
     color: var(--deep-text);
 }
 
 .highlight {
-    color: var(--peach-accent);
-    /* Or maybe a slightly darker peach for text */
+    color: var(--logo-gray);
 }
 
 .subtitle {
-    font-size: 1.25rem;
-    line-height: 1.6;
-    margin-bottom: 2.5rem;
-    color: #666;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--logo-gray);
 }
 
 .actions {
     display: flex;
     gap: 1.5rem;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
 }
 
 .learnMore {
-    text-decoration: underline;
-    text-underline-offset: 4px;
     color: var(--deep-text);
     font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s;
+    font-family: 'Inter', sans-serif;
 }
 
-.imageWrapper {
-    display: flex;
-    justify-content: center;
-    position: relative;
-}
-
-.photoPlaceholder {
-    position: relative;
-    width: 400px;
-    height: 500px;
-    background-color: #fff;
-    border-radius: 200px 200px 20px 20px;
-    /* Arch shape */
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-    /* Soft shadow */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.tempImage {
-    object-fit: contain;
-    opacity: 0.5;
-}
-
-.caption {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #999;
+.learnMore:hover {
+    color: var(--salmon);
 }
 
 @media (max-width: 768px) {
     .hero {
-        padding: 4rem 0;
+        padding: 1.5rem 0 1rem;
         min-height: auto;
     }
 
-    .content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 3rem;
-    }
-
-    .title {
-        font-size: 2.5rem;
-    }
-
-    .actions {
-        justify-content: center;
+    .heroLogo {
+        width: clamp(240px, 70vw, 380px);
     }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import AnimatedLogo from './Logo/AnimatedLogo';
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -35,7 +36,9 @@ export default function Header() {
         <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
             <div className={`container ${styles.container}`}>
                 <div className={styles.logo}>
-                    <a href="#hero" onClick={closeMenu}>Josefina</a>
+                    <a href="#hero" onClick={closeMenu}>
+                        <AnimatedLogo mode="navbar" className={styles.navbarLogo} />
+                    </a>
                 </div>
 
                 <nav className={`${styles.nav} ${mobileMenuOpen ? styles.mobileOpen : ''}`}>

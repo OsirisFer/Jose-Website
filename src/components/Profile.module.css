@@ -1,5 +1,14 @@
 .profile {
-    background-color: #fff;
+    background-color: var(--soft-beige);
+}
+
+/* Thin salmon separator at the top of the section */
+.salmonLine {
+    width: 60px;
+    height: 1.5px;
+    background: var(--salmon-light);
+    margin: 0 auto 3rem;
+    border-radius: 2px;
 }
 
 .grid {
@@ -19,7 +28,7 @@
     font-size: 1.1rem;
     line-height: 1.8;
     margin-bottom: 1.5rem;
-    color: #555;
+    color: var(--foreground);
     font-family: 'Inter', sans-serif;
 }
 
@@ -28,36 +37,61 @@
     gap: 2rem;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--warm-peach);
+    flex-wrap: wrap;
 }
 
 .credentials strong {
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-    color: var(--peach-accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+    color: var(--logo-gray);
+    font-family: 'Inter', sans-serif;
+}
+
+.credentials p {
+    color: var(--foreground);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+}
+
+/* philosophy: positioned so section-ambient watermark can center inside */
+.philosophy {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    background-color: var(--background);
 }
 
 .subHeading {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    position: relative;
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
     color: var(--deep-text);
+    z-index: 1;
 }
 
 .quote {
+    position: relative;
     font-family: 'Young Serif', serif;
-    font-size: 1.5rem;
-    line-height: 1.6;
+    font-size: 1.25rem;
+    line-height: 1.75;
     color: var(--deep-text);
-    padding-left: 1.5rem;
-    border-left: 4px solid var(--warm-peach);
+    border-left: 3px solid var(--salmon-light);
+    padding-left: 1.25rem;
+    z-index: 1;
 }
 
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr;
         gap: 3rem;
+    }
+
+    .credentials {
+        gap: 1.5rem;
     }
 }
