@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCalendarService } from '@/lib/google';
-import { validatePatientCode } from '@/lib/sheets';
+import { validatePatientCode, getScheduleForDate } from '@/lib/sheets';
 import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin, isValidDate } from '@/lib/security';
 
 export async function GET(request) {
@@ -67,38 +67,38 @@ export async function GET(request) {
         const busySlots = response.data.calendars[CALENDAR_ID].busy;
         const availableSlots = [];
 
-        // Generate slots
-        // If 30 min duration: :00 and :30 are valid start times.
-        // If 60 min duration: :00 and :30 are still valid start times.
-        // We use env vars for Work Start/End or defaults
-        const workStartStr = process.env.WORK_START || '09:00';
-        const workEndStr = process.env.WORK_END || '17:00';
+        // Get work schedule from Sheet
+        const schedule = await getScheduleForDate(dateParam);
+        if (!schedule.active) {
+            return NextResponse.json({ slots: [], duration: durationMinutes });
+        }
 
-        const workStart = new Date(`${dateParam}T${workStartStr}:00`);
-        const workEnd = new Date(`${dateParam}T${workEndStr}:00`);
+        const workStart = new Date(`${dateParam}T${schedule.start}:00`);
+        const workEnd   = new Date(`${dateParam}T${schedule.end}:00`);
+        const lunchStart = schedule.lunchStart ? new Date(`${dateParam}T${schedule.lunchStart}:00`) : null;
+        const lunchEnd   = schedule.lunchEnd   ? new Date(`${dateParam}T${schedule.lunchEnd}:00`)   : null;
 
         let currentSlot = new Date(workStart);
 
         while (currentSlot < workEnd) {
-            // Check if slot + duration fits in work day
             const slotEnd = new Date(currentSlot.getTime() + durationMinutes * 60000);
             if (slotEnd > workEnd) break;
 
-            // Check overlap with busy slots
+            // Skip lunch break
+            const overlapsLunch = lunchStart && lunchEnd &&
+                currentSlot < lunchEnd && slotEnd > lunchStart;
+
+            // Check calendar busy slots
             const isBusy = busySlots.some(busy => {
                 const busyStart = new Date(busy.start);
-                const busyEnd = new Date(busy.end);
-
-                // Overlap condition: (StartA < EndB) and (EndA > StartB)
+                const busyEnd   = new Date(busy.end);
                 return (currentSlot < busyEnd) && (slotEnd > busyStart);
             });
 
-            if (!isBusy) {
-                // Return just the start time string HH:mm
+            if (!overlapsLunch && !isBusy) {
                 availableSlots.push(currentSlot.toTimeString().slice(0, 5));
             }
 
-            // Increment by 30 mins always (slots start at :00 or :30)
             currentSlot = new Date(currentSlot.getTime() + 30 * 60000);
         }
 
