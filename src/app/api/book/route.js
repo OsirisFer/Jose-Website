@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCalendarService } from "@/lib/google";
 import { validatePatientCode, markFirstInterviewDone, updatePatientBookingData } from "@/lib/sheets";
-import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin, isValidDate, isValidTime } from "@/lib/security";
+import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin, isValidDate, isValidTime, escapeHtml } from "@/lib/security";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
@@ -107,9 +107,9 @@ async function sendNotificationEmail({ name, email, phone, date, time, durationM
         <p>Se agendó un nuevo turno desde el sitio web.</p>
 
         <div style="background: #f5f0eb; padding: 20px; border-radius: 12px; margin: 20px 0;">
-            <p style="margin: 0 0 10px 0;"><strong>👤 Paciente:</strong> ${name}</p>
-            <p style="margin: 0 0 10px 0;"><strong>📧 Email:</strong> ${email}</p>
-            <p style="margin: 0 0 10px 0;"><strong>📱 Teléfono:</strong> ${phone || "No proporcionado"}</p>
+            <p style="margin: 0 0 10px 0;"><strong>👤 Paciente:</strong> ${escapeHtml(name)}</p>
+            <p style="margin: 0 0 10px 0;"><strong>📧 Email:</strong> ${escapeHtml(email)}</p>
+            <p style="margin: 0 0 10px 0;"><strong>📱 Teléfono:</strong> ${escapeHtml(phone || "No proporcionado")}</p>
             <p style="margin: 0 0 10px 0;"><strong>📅 Fecha:</strong> ${formattedDate}</p>
             <p style="margin: 0 0 10px 0;"><strong>🕐 Hora:</strong> ${time} hs (Uruguay)</p>
             <p style="margin: 0 0 10px 0;"><strong>⏱️ Tipo:</strong> ${sessionType}</p>
