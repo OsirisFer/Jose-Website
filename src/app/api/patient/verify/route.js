@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { validatePatientCode } from "@/lib/sheets";
-import { checkRateLimit, isBlacklisted } from "@/lib/security";
+import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin } from "@/lib/security";
 
 export async function POST(request) {
-    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    if (!isValidOrigin(request)) {
+        return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
+    }
 
-    if (isBlacklisted(ip) || !checkRateLimit(ip, 20, 60000)) {
+    const ip = extractIp(request);
+
+    if (isBlacklisted(ip) || !checkRateLimit(ip, 10, 60000)) {
         return NextResponse.json({ ok: false, error: "Too many requests" }, { status: 429 });
     }
 

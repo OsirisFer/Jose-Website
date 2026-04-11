@@ -6,7 +6,7 @@ import { getAuthClient } from "./google";
 const SHEETS_SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 
 let cache = { data: null, timestamp: 0 };
-const CACHE_TTL = 60 * 1000; // 60s
+const CACHE_TTL = 15 * 1000; // 15s
 
 async function getSheetsClient() {
     const client = await getAuthClient(SHEETS_SCOPES);
@@ -37,7 +37,8 @@ async function getPatientData() {
     const rows = response.data.values || [];
 
     // Detect start index (skip header if present)
-    const startIndex = rows[0]?.[0]?.toLowerCase?.() === "code" ? 1 : 0;
+    const firstCell = rows[0]?.[0]?.toLowerCase?.().trim() ?? '';
+    const startIndex = ['code', 'código', 'codigo'].includes(firstCell) ? 1 : 0;
 
     const patients = {};
 
@@ -97,9 +98,9 @@ export async function markFirstInterviewDone(code) {
     await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
         range: range,
-        valueInputOption: "RAW",
+        valueInputOption: "USER_ENTERED",
         requestBody: {
-            values: [["TRUE"]]
+            values: [[true]]
         }
     });
 

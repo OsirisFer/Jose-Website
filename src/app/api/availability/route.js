@@ -1,18 +1,25 @@
 import { NextResponse } from 'next/server';
 import { getCalendarService } from '@/lib/google';
 import { validatePatientCode } from '@/lib/sheets';
-import { checkRateLimit, isBlacklisted } from '@/lib/security';
+import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin, isValidDate } from '@/lib/security';
 
 export async function GET(request) {
-    const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
+    if (!isValidOrigin(request)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
-    // Security Check 1: Blacklist & Rate Limit
+    const ip = extractIp(request);
+
     if (isBlacklisted(ip) || !checkRateLimit(ip, 20, 60000)) {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
     const { searchParams } = new URL(request.url);
     const dateParam = searchParams.get('date');
+
+    if (!isValidDate(dateParam)) {
+        return NextResponse.json({ error: 'Invalid date' }, { status: 400 });
+    }
     const patientCode = request.headers.get('x-patient-code');
 
     // Security Check 2: Patient Code Guard
@@ -24,9 +31,6 @@ export async function GET(request) {
         return NextResponse.json({ error: 'Invalid or inactive patient code' }, { status: 403 });
     }
 
-    if (!dateParam) {
-        return NextResponse.json({ error: 'Date is required' }, { status: 400 });
-    }
 
     // Configuration
     const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;

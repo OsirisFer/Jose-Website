@@ -33,7 +33,7 @@ export default function FirstTimeForm({ onBack, whatsappNumber, whatsappMessage 
 
             <div className={styles.success} style={{ padding: '1rem 0' }}>
                 <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem', lineHeight: '1.6' }}>
-                    Para garantizar la mejor atención, Josefina realiza una breve <strong>entrevista telefónica gratuita</strong> antes de comenzar.
+                    Comunicate por WhatsApp para coordinar tu <strong>entrevista de 30 minutos</strong> con Josefina — un espacio para conocerte y evaluar cómo acompañarte mejor.
                 </p>
 
                 <div style={{ maxWidth: '400px', margin: '0 auto 2rem auto', textAlign: 'left' }}>

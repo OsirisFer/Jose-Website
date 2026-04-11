@@ -38,9 +38,9 @@ export default function Profile() {
                         <AnimatedLogo mode="section-ambient" />
                         <h3 className={styles.subHeading}>Mi Filosofía</h3>
                         <blockquote className={styles.quote}>
-                            "La psicoterapia es un espacio construído por la escucha, la reflexión y el compromiso por el cambio.
+                            &ldquo;La psicoterapia es un espacio construído por la escucha, la reflexión y el compromiso por el cambio.
                             Un lugar en donde cada individuo es acompañado desde una mirada integral y respetuosa desde la singularidad.
-                            Porque cada proceso es único y merece ser acompañado desde el cuidado y el respeto, priorizando siempre el bienestar y enfatizando la salud mental."
+                            Porque cada proceso es único y merece ser acompañado desde el cuidado y el respeto, priorizando siempre el bienestar y enfatizando la salud mental.&rdquo;
                         </blockquote>
                     </div>
                 </div>

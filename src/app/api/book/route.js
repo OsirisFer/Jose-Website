@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCalendarService } from "@/lib/google";
 import { validatePatientCode, markFirstInterviewDone } from "@/lib/sheets";
-import { checkRateLimit, isBlacklisted } from "@/lib/security";
+import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin, isValidDate, isValidTime, escapeHtml } from "@/lib/security";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
@@ -25,24 +25,30 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes }) 
         timeZone: 'America/Montevideo'
     });
 
-    const sessionType = durationMinutes === 30 ? "Primera Entrevista (30 min)" : "Sesión (60 min)";
+    const isFirstInterview = durationMinutes === 30;
+    const sessionType = isFirstInterview ? "Primera Entrevista (30 min)" : "Sesión (60 min)";
+
+    const bodyContent = isFirstInterview
+        ? `<p>Hola <strong>${name}</strong>,</p>
+           <p>Tu primera entrevista con la Lic. Josefina ha sido agendada. Es un espacio de 30 minutos para conocerte y evaluar juntos cómo acompañarte de la mejor manera.</p>`
+        : `<p>Hola <strong>${name}</strong>,</p>
+           <p>Tu sesión con la Lic. Josefina ha sido agendada correctamente.</p>`;
 
     const htmlContent = `
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fdfcf8;">
-        <h2 style="color: #2c2420;">¡Reserva Confirmada!</h2>
-        <p>Hola <strong>${name}</strong>,</p>
-        <p>Tu cita con la Lic. Josefina ha sido agendada correctamente.</p>
-        
+        <h2 style="color: #2c2420;">${isFirstInterview ? 'Primera Entrevista Confirmada' : '¡Reserva Confirmada!'}</h2>
+        ${bodyContent}
+
         <div style="background: #f5f0eb; padding: 20px; border-radius: 12px; margin: 20px 0;">
             <p style="margin: 0 0 10px 0;"><strong>📅 Fecha:</strong> ${formattedDate}</p>
             <p style="margin: 0 0 10px 0;"><strong>🕐 Hora:</strong> ${time} hs (Uruguay)</p>
             <p style="margin: 0;"><strong>⏱️ Duración:</strong> ${sessionType}</p>
         </div>
-        
+
         <p style="font-size: 0.9rem; color: #666;">
-            Si necesitas cancelar o reprogramar tu cita, por favor comunícate con anticipación.
+            Si necesitas cancelar o reprogramar, por favor comunícate con anticipación.
         </p>
-        
+
         <hr style="border: none; border-top: 1px solid #e8d5c4; margin: 20px 0;">
         <p style="font-size: 0.85rem; color: #888;">
             Este correo fue enviado automáticamente. Por favor no respondas a este mensaje.
@@ -53,16 +59,21 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes }) 
     await transporter.sendMail({
         from: `"Lic. Josefina" <${process.env.SMTP_USER}>`,
         to: to,
-        subject: `Confirmación de Cita - ${formattedDate}`,
+        subject: isFirstInterview
+            ? `Primera Entrevista Confirmada - ${formattedDate}`
+            : `Confirmación de Sesión - ${formattedDate}`,
         html: htmlContent,
     });
 }
 
 export async function POST(request) {
-    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    if (!isValidOrigin(request)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-    // Rate limit + blacklist
-    if (isBlacklisted(ip) || !checkRateLimit(ip, 10, 60000)) {
+    const ip = extractIp(request);
+
+    if (isBlacklisted(ip) || !checkRateLimit(ip, 5, 60000)) {
         return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
 
@@ -92,6 +103,14 @@ export async function POST(request) {
         // Input validation
         if (!date || !time || !name || !email) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
+        if (!isValidDate(date)) {
+            return NextResponse.json({ error: "Invalid date" }, { status: 400 });
+        }
+
+        if (!isValidTime(time)) {
+            return NextResponse.json({ error: "Invalid time" }, { status: 400 });
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -138,7 +157,7 @@ export async function POST(request) {
 <strong>Teléfono:</strong> ${phone || ""}<br>
 <strong>Tipo:</strong> ${isFirstInterview ? "Primera Entrevista (30 min)" : "Sesión Standard (60 min)"}<br><br>
 Reserva realizada desde el sitio web.<br>
-Código Paciente: ${patientCode}
+<strong>Código Paciente:</strong> ${patientCode}
       `,
             start: {
                 dateTime: startDateTime.toISOString(),
