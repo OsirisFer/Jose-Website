@@ -24,34 +24,29 @@ function formatDate(date, time) {
     });
 }
 
-// Generate ICS calendar attachment
-function generateIcs({ bookingId, date, time, durationMinutes, name, email, sessionType }) {
-    const dateCompact = date.replace(/-/g, '');
+// Generate Google Calendar "Add to Calendar" link
+function generateGoogleCalendarLink({ date, time, durationMinutes, sessionType }) {
     const [h, m] = time.split(':').map(Number);
-    const startTime = `${String(h).padStart(2, '0')}${String(m).padStart(2, '0')}00`;
     const endTotal = h * 60 + m + durationMinutes;
-    const endTime = `${String(Math.floor(endTotal / 60)).padStart(2, '0')}${String(endTotal % 60).padStart(2, '0')}00`;
+    const endH = Math.floor(endTotal / 60);
+    const endM = endTotal % 60;
 
-    return [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Psic. Josefina//Booking//ES',
-        'METHOD:PUBLISH',
-        'BEGIN:VEVENT',
-        `UID:${bookingId}@josefina-gdrd`,
-        `DTSTART;TZID=America/Montevideo:${dateCompact}T${startTime}`,
-        `DTEND;TZID=America/Montevideo:${dateCompact}T${endTime}`,
-        `SUMMARY:${sessionType} - Lic. Josefina García da Rosa`,
-        `DESCRIPTION:Tu cita con la Lic. Josefina García da Rosa.\\nSi necesitás cancelar\\, por favor comunicarte con anticipación.`,
-        `ORGANIZER;CN=Lic. Josefina:mailto:${process.env.SMTP_USER}`,
-        `ATTENDEE;CN=${name}:mailto:${email}`,
-        'STATUS:CONFIRMED',
-        'END:VEVENT',
-        'END:VCALENDAR',
-    ].join('\r\n');
+    const dateCompact = date.replace(/-/g, '');
+    const start = `${dateCompact}T${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}00`;
+    const end = `${dateCompact}T${String(endH).padStart(2,'0')}${String(endM).padStart(2,'0')}00`;
+
+    const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: `${sessionType} - Lic. Josefina García da Rosa`,
+        dates: `${start}/${end}`,
+        details: 'Tu cita con la Lic. Josefina García da Rosa.\nSi necesitás cancelar, por favor comunicarte con anticipación.',
+        ctz: 'America/Montevideo',
+    });
+
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-async function sendConfirmationEmail({ to, name, date, time, durationMinutes, icsContent }) {
+async function sendConfirmationEmail({ to, name, date, time, durationMinutes, calendarLink }) {
     const transporter = createTransporter();
     const formattedDate = formatDate(date, time);
     const isFirstInterview = durationMinutes === 30;
@@ -75,9 +70,10 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes, ic
         </div>
 
         <p style="font-size: 0.9rem; color: #666;">
-            Si necesitas cancelar o reprogramar, por favor comunícate con anticipación.<br>
-            Podés agregar esta cita a tu calendario desde el archivo adjunto.
+            Si necesitas cancelar o reprogramar, por favor comunícate con anticipación.
         </p>
+
+        ${calendarLink ? `<a href="${calendarLink}" target="_blank" style="display: inline-block; margin: 8px 0 16px; background: #4285f4; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem;">📅 Agregar a Google Calendar</a>` : ''}
 
         <hr style="border: none; border-top: 1px solid #e8d5c4; margin: 20px 0;">
         <p style="font-size: 0.85rem; color: #888;">
@@ -93,11 +89,6 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes, ic
             ? `Primera Entrevista Confirmada - ${formattedDate}`
             : `Confirmación de Sesión - ${formattedDate}`,
         html: htmlContent,
-        attachments: icsContent ? [{
-            filename: 'cita.ics',
-            content: icsContent,
-            contentType: 'text/calendar; method=PUBLISH',
-        }] : [],
     });
 }
 
@@ -263,12 +254,12 @@ Reserva realizada desde el sitio web.<br>
             console.error("Failed to update patient booking data:", sheetError);
         }
 
-        // Generate ICS for calendar attachment
-        const icsContent = generateIcs({ bookingId, date, time, durationMinutes, name, email, sessionType });
+        // Generate Google Calendar link
+        const calendarLink = generateGoogleCalendarLink({ date, time, durationMinutes, sessionType });
 
         // Send confirmation email to patient (fail-soft)
         try {
-            await sendConfirmationEmail({ to: email, name, date, time, durationMinutes, icsContent });
+            await sendConfirmationEmail({ to: email, name, date, time, durationMinutes, calendarLink });
         } catch (emailError) {
             console.error("Failed to send confirmation email:", emailError);
         }
