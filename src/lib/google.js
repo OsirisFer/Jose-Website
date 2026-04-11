@@ -13,15 +13,6 @@ function getPrivateKey() {
     // 2. Convert literal \n to real newlines
     key = key.replace(/\\n/g, "\n");
 
-    // Debuging: Check first line
-    const firstLine = key.split('\n')[0];
-    console.log("DEBUG KEY:", {
-        startsCorrectly: firstLine.includes("BEGIN PRIVATE KEY"),
-        totalLength: key.length,
-        hasNewlines: key.includes('\n'),
-        firstLine: firstLine.substring(0, 20) + "..."
-    });
-
     return key;
 }
 

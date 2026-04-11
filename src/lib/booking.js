@@ -16,7 +16,7 @@ export const getAvailableSlots = async (date, patientCode) => {
         return slots || [];
     } catch (error) {
         console.error(error);
-        return [];
+        return { error: error.message };
     }
 };
 
