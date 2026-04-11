@@ -1,5 +1,6 @@
 .booking {
     background-color: var(--background);
+    scroll-margin-top: 25vh;
 }
 
 .heading {
