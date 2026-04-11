@@ -20,8 +20,9 @@ async function getPatientData() {
     }
 
     const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
-    // Assuming A=Code, B=Active, C=Notes, D=FirstInterviewDone
-    const RANGE = "Patients!A:D";
+    // A=Código, B=Activo, C=Nombre, D=Primera Entrevista, E=Notas
+    // F=Modalidad, G=Email, H=Teléfono, I=Total Sesiones, J=Última Sesión
+    const RANGE = "Patients!A:J";
 
     if (!SHEET_ID) {
         throw new Error("GOOGLE_SHEETS_ID not set");
@@ -46,21 +47,20 @@ async function getPatientData() {
         const code = (row[0] || "").toString().trim().toUpperCase();
         if (!code) return;
 
-        // Parse Active
         const activeRaw = row[1];
         const isActive = activeRaw === true || String(activeRaw).toUpperCase() === "TRUE";
 
-        // Parse FirstInterviewDone (Column D)
         const doneRaw = row[3];
         const isDone = doneRaw === true || String(doneRaw).toUpperCase() === "TRUE";
 
-        // Store rowIndex (absolute 1-based index for updating)
-        // index is 0-based from slice, so actual row = startIndex + index + 1
+        const sessionCount = parseInt(row[8]) || 0; // col I
+
         const absoluteRow = startIndex + index + 1;
 
         patients[code] = {
             active: isActive,
             firstInterviewDone: isDone,
+            sessionCount,
             rowIndex: absoluteRow
         };
     });
@@ -87,23 +87,46 @@ export async function markFirstInterviewDone(code) {
     const patients = await getPatientData();
     const data = patients[String(code).trim().toUpperCase()];
 
-    if (!data) return; // Code not found
+    if (!data) return;
 
     const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
     const sheets = await getSheetsClient();
 
-    // Update Column D at the specific row
-    const range = `Patients!D${data.rowIndex}`;
-
     await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
-        range: range,
+        range: `Patients!D${data.rowIndex}`,
         valueInputOption: "USER_ENTERED",
+        requestBody: { values: [[true]] }
+    });
+
+    cache = { data: null, timestamp: 0 };
+}
+
+// Auto-fill contact info + increment session count + update last session date
+export async function updatePatientBookingData(code, { email, phone, date }) {
+    if (!code) return;
+    const patients = await getPatientData();
+    const data = patients[String(code).trim().toUpperCase()];
+
+    if (!data) return;
+
+    const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
+    const sheets = await getSheetsClient();
+    const row = data.rowIndex;
+    const newSessionCount = (data.sessionCount || 0) + 1;
+
+    await sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: SHEET_ID,
         requestBody: {
-            values: [[true]]
+            valueInputOption: "RAW",
+            data: [
+                { range: `Patients!G${row}`, values: [[email]] },
+                { range: `Patients!H${row}`, values: [[phone || '']] },
+                { range: `Patients!I${row}`, values: [[newSessionCount]] },
+                { range: `Patients!J${row}`, values: [[date]] },
+            ]
         }
     });
 
-    // Invalidate cache immediately so next read sees the update
     cache = { data: null, timestamp: 0 };
 }
