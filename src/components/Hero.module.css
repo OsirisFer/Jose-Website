@@ -37,11 +37,11 @@
 .title {
     font-size: clamp(2rem, 4.5vw, 3.75rem);
     line-height: 1.2;
-    color: var(--deep-text);
+    color: var(--logo-gray);
 }
 
 .highlight {
-    color: var(--logo-gray);
+    color: var(--wing-salmon);
 }
 
 .subtitle {
@@ -62,7 +62,7 @@
 }
 
 .learnMore {
-    color: var(--deep-text);
+    color: var(--wing-salmon);
     font-weight: 500;
     text-decoration: underline;
     text-underline-offset: 4px;

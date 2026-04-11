@@ -11,7 +11,7 @@
 .heading {
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: var(--deep-text);
+    color: var(--logo-gray);
 }
 
 .text {
@@ -23,7 +23,7 @@
 }
 
 .text strong {
-    color: var(--deep-text);
+    color: var(--wing-salmon);
     font-weight: 600;
 }
 

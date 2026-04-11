@@ -7,12 +7,16 @@ export default function Services() {
             description: "Sesiones uno a uno para ayudarte a trabajar la ansiedad, depresión o desafíos personales en un espacio seguro."
         },
         {
-            title: "Terapia de Pareja",
-            description: "Navegando dinámicas de relación para mejorar la comunicación, la confianza y la intimidad."
+            title: "Terapia Sistémica",
+            description: "Un enfoque orientado a comprender y trabajar las dificultades a partir de los vínculos y contextos de cada persona. Acompaño procesos en pareja, familias y grupos de trabajo ayudando a mejorar la comunicación y promoviendo relaciones más saludables."
+        },
+        {
+            title: "Orientación Vocacional",
+            description: "Un espacio de acompañamiento para explorar tus intereses, talentos, habilidades, dudas y proyectos personales, facilitando la toma de decisiones académicas y laborales de manera más clara y consciente."
         },
         {
             title: "Consultas Online",
-            description: "Sesiones de video flexibles y seguras para quienes prefieren conectarse desde la comodidad de su hogar."
+            description: "Además de la modalidad presencial, contamos con sesiones por videollamada flexibles y seguras para quienes prefieren conectarse desde la comodidad de su hogar."
         }
     ];
 

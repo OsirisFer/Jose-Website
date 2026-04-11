@@ -12,7 +12,9 @@
   --warm-peach:   #e5cfc0;   /* peach — borders, dividers */
   --logo-gray:       #b0aca8;   /* exact gray sampled from jdot/text_gdrd PNGs */
   --logo-gray-light: #c8c5c2;   /* lighter tint for small text on dark backgrounds */
-  --deep-text:       #3d2f2a;   /* dark warm brown — headings */
+  --wing-salmon:     #f0c8b4;   /* exact fill color sampled from left_wing.png */
+  --wing-salmon-dark: #c49a82;  /* darkened hue — readable contrast for body/subheadings */
+  --deep-text:       #3d2f2a;   /* dark warm brown — kept for dark section text */
 
   /* Aliases kept for backward compatibility */
   --peach-accent: var(--salmon);
@@ -41,7 +43,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Young Serif', serif;
-  color: var(--deep-text);
+  color: var(--wing-salmon);
   font-weight: normal;
 }
 
@@ -70,7 +72,7 @@ a {
 }
 
 .btn-primary:hover {
-  background-color: #6b5f5a;
+  background-color: var(--salmon);
   transform: translateY(-1px);
 }
 

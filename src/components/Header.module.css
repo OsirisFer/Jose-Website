@@ -46,7 +46,7 @@
 
 .navLink {
     text-decoration: none;
-    color: var(--deep-text);
+    color: var(--wing-salmon-dark);
     font-family: 'Inter', sans-serif;
     font-weight: 500;
     transition: color 0.2s;

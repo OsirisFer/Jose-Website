@@ -8,11 +8,12 @@ export default function Contact() {
                 <div className={styles.content}>
                     <div className={styles.info}>
                         <h3>Ubicación</h3>
-                        <p>123 Wellness Blvd, Suite 200<br />Ciudad, CP 12345</p>
+                        <p>Maldonado, Uruguay<br />San Carlos, Uruguay</p>
+                        <p className={styles.locationNote}>(dirección exacta del consultorio<br />coordinada por contacto)</p>
                     </div>
                     <div className={styles.info}>
                         <h3>Contacto</h3>
-                        <p>Email: majogdrd@gmail.com <br />Teléfono: (555) 123-4567</p>
+                        <p>Email: psicjosefinagdrd@gmail.com<br />Teléfono: +598 98 076 531</p>
                     </div>
                 </div>
             </div>
