@@ -126,7 +126,7 @@ export default function AnimatedLogo({ mode = 'hero', className = '', hideText =
     >
       <img
         className={styles.beigebg}
-        src="/logo/beige_bg.png"
+        src="/logo/beige_bg.webp"
         alt=""
         aria-hidden="true"
         draggable={false}
@@ -135,21 +135,21 @@ export default function AnimatedLogo({ mode = 'hero', className = '', hideText =
       <div className={wingsWrapperClass}>
         <img
           className={leftWingClass}
-          src="/logo/left_wing.png"
+          src="/logo/left_wing.webp"
           alt=""
           aria-hidden="true"
           draggable={false}
         />
         <img
           className={rightWingClass}
-          src="/logo/right_wing.png"
+          src="/logo/right_wing.webp"
           alt=""
           aria-hidden="true"
           draggable={false}
         />
         <img
           className={styles.jdot}
-          src="/logo/jdot.png"
+          src="/logo/jdot.webp"
           alt="GdRD"
           draggable={false}
         />
@@ -158,7 +158,7 @@ export default function AnimatedLogo({ mode = 'hero', className = '', hideText =
       {showText && (
         <img
           className={styles.textGdrd}
-          src="/logo/text_gdrd.png"
+          src="/logo/text_gdrd.webp"
           alt=""
           aria-hidden="true"
           draggable={false}
