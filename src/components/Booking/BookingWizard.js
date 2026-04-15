@@ -171,7 +171,7 @@ export default function BookingWizard({ patientCode, isFirstInterviewDone, onCan
             {step === 3 && (
                 <div className={styles.success}>
                     <div className={styles.checkmark}>✓</div>
-                    <h3>¡Reserva Confirmada!</h3>
+                    <h3>¡Reserva confirmada!</h3>
                     <p>
                         Tu cita con Josefina está agendada para el <strong>{new Date(`${date}T12:00:00`).toLocaleDateString('es-UY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} a las {selectedSlot}</strong>.
                     </p>
