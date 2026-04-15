@@ -71,9 +71,8 @@ export default function Profile() {
                                 { year: '2020', text: 'Curso de Prevención del Suicidio en Personas Mayores, Resistiré ONG, Uruguay' },
                             ].map((item, i) => (
                                 <div key={i} className={styles.timelineItem}>
-                                    <span className={styles.timelineYear}>{item.year}</span>
                                     <span className={styles.timelineDot} />
-                                    <p className={styles.timelineText}>{item.text}</p>
+                                    <p className={styles.timelineText}>{item.text} <span className={styles.timelineYear}>({item.year})</span></p>
                                 </div>
                             ))}
                         </div>

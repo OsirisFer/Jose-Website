@@ -161,7 +161,7 @@
 .timeline::before {
     content: '';
     position: absolute;
-    left: 2.6rem;
+    left: 0.3rem;
     top: 0;
     bottom: 0;
     width: 1px;
@@ -170,7 +170,7 @@
 
 .timelineItem {
     display: grid;
-    grid-template-columns: 2.6rem 0.8rem 1fr;
+    grid-template-columns: 0.8rem 1fr;
     align-items: center;
     gap: 0.9rem;
     padding: 0.5rem 0;
@@ -180,9 +180,7 @@
     font-size: 0.72rem;
     font-family: 'Inter', sans-serif;
     color: var(--logo-gray);
-    font-weight: 500;
-    text-align: right;
-    padding-right: 0.3rem;
+    font-weight: 400;
 }
 
 .timelineDot {
@@ -190,7 +188,7 @@
     height: 6px;
     border-radius: 50%;
     background-color: var(--salmon-light);
-    justify-self: center;
+    justify-self: start;
     position: relative;
     z-index: 1;
 }
