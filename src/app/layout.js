@@ -15,6 +15,9 @@ const youngSerif = Young_Serif({
 });
 
 export const metadata = {
+  verification: {
+    google: 'lQYjnClZB5qJVt-DT3QsJ7bYoYpMsKQkTPZ4c6HdUno',
+  },
   title: "Lic. Josefina García da Rosa | Psicóloga en Maldonado",
   description: "Psicóloga clínica en Maldonado, Punta del Este y San Carlos. Atención individual presencial y online. Primera entrevista sin compromiso. Agendá tu turno.",
   keywords: "psicóloga Maldonado, psicóloga Punta del Este, psicóloga San Carlos, psicología clínica, terapia individual, salud mental Uruguay, Josefina García da Rosa",
