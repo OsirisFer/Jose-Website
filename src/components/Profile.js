@@ -43,34 +43,40 @@ export default function Profile() {
 
                 <div className={styles.formation}>
                     <h3 className={styles.formationHeading}>Formación</h3>
-                    <div className={styles.formationGrid}>
 
-                        <div className={styles.formationGroup}>
-                            <span className={styles.formationLabel}>Posgrado</span>
-                            <p className={styles.formationTitle}>Maestría Oficial Universitaria en Dirección y Gestión de Recursos Humanos</p>
-                            <p className={styles.formationMeta}>Universidad Internacional de la Rioja (UNIR), España · 2026–2027</p>
+                    <div className={styles.formationDegrees}>
+                        <div className={styles.degreeCard}>
+                            <span className={styles.degreeTag}>Posgrado</span>
+                            <p className={styles.degreeTitle}>Maestría Oficial Universitaria en Dirección y Gestión de Recursos Humanos</p>
+                            <p className={styles.degreeMeta}>Universidad Internacional de la Rioja (UNIR) · España · 2026–2027</p>
                         </div>
-
-                        <div className={styles.formationGroup}>
-                            <span className={styles.formationLabel}>Grado</span>
-                            <p className={styles.formationTitle}>Licenciatura en Psicología</p>
-                            <p className={styles.formationMeta}>Instituto Universitario Francisco de Asís (UNIFA), Maldonado · 2025</p>
+                        <div className={styles.degreeCard}>
+                            <span className={styles.degreeTag}>Grado</span>
+                            <p className={styles.degreeTitle}>Licenciatura en Psicología</p>
+                            <p className={styles.degreeMeta}>Instituto Universitario Francisco de Asís (UNIFA) · Maldonado · 2025</p>
                         </div>
+                    </div>
 
-                        <div className={styles.formationGroup}>
-                            <span className={styles.formationLabel}>Formación complementaria</span>
-                            <ul className={styles.formationList}>
-                                <li>Taller intensivo — Práctica Profesional en la Salud Mental, Lic. Daniela Figueiras Gamarra <span>(2025)</span></li>
-                                <li>Seminario Académico sobre Prevención de la Conducta Suicida, Cure, Maldonado <span>(2024)</span></li>
-                                <li>Curso Psicodiagnóstico Infantil, Centro Referencia, Uruguay <span>(2023)</span></li>
-                                <li>Curso Prevención de Suicidios, Rotary Club Isla Gorriti, Uruguay <span>(2023)</span></li>
-                                <li>Congreso de Delitos Sexuales, Centro de Formación de la Fiscalía General de la Nación, Uruguay <span>(2023)</span></li>
-                                <li>Congreso Internacional de Prevención del Suicidio, Grupo Departamental de Prevención del Suicidio de Maldonado <span>(2022)</span></li>
-                                <li>Curso de Maternología, Facultad de Psicología UdelaR <span>(2021)</span></li>
-                                <li>Curso de Prevención del Suicidio en Personas Mayores, Resistiré ONG, Uruguay <span>(2020)</span></li>
-                            </ul>
+                    <div className={styles.complementary}>
+                        <p className={styles.complementaryLabel}>Formación complementaria</p>
+                        <div className={styles.timeline}>
+                            {[
+                                { year: '2025', text: 'Taller intensivo — Práctica Profesional en la Salud Mental, Lic. Daniela Figueiras Gamarra' },
+                                { year: '2024', text: 'Seminario Académico sobre Prevención de la Conducta Suicida, Cure, Maldonado' },
+                                { year: '2023', text: 'Curso Psicodiagnóstico Infantil, Centro Referencia, Uruguay' },
+                                { year: '2023', text: 'Curso Prevención de Suicidios, Rotary Club Isla Gorriti, Uruguay' },
+                                { year: '2023', text: 'Congreso de Delitos Sexuales, Centro de Formación de la Fiscalía General de la Nación, Uruguay' },
+                                { year: '2022', text: 'Congreso Internacional de Prevención del Suicidio, Grupo Departamental de Prevención del Suicidio de Maldonado' },
+                                { year: '2021', text: 'Curso de Maternología, Facultad de Psicología UdelaR' },
+                                { year: '2020', text: 'Curso de Prevención del Suicidio en Personas Mayores, Resistiré ONG, Uruguay' },
+                            ].map((item, i) => (
+                                <div key={i} className={styles.timelineItem}>
+                                    <span className={styles.timelineYear}>{item.year}</span>
+                                    <span className={styles.timelineDot} />
+                                    <p className={styles.timelineText}>{item.text}</p>
+                                </div>
+                            ))}
                         </div>
-
                     </div>
                 </div>
 
