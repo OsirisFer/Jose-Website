@@ -15,12 +15,12 @@ const youngSerif = Young_Serif({
 });
 
 export const metadata = {
-  title: "Lic. Josefina García da Rosa | Psicóloga en Montevideo",
-  description: "Psicóloga clínica en Montevideo. Atención individual presencial y online. Primera entrevista sin compromiso. Agendá tu turno.",
-  keywords: "psicóloga Montevideo, psicología clínica, terapia individual, salud mental Uruguay, Josefina García da Rosa",
+  title: "Lic. Josefina García da Rosa | Psicóloga en Punta del Este",
+  description: "Psicóloga clínica en Punta del Este, Maldonado y San Carlos. Atención individual presencial y online. Primera entrevista sin compromiso. Agendá tu turno.",
+  keywords: "psicóloga Punta del Este, psicóloga Maldonado, psicóloga San Carlos, psicología clínica, terapia individual, salud mental Uruguay, Josefina García da Rosa",
   openGraph: {
-    title: "Lic. Josefina García da Rosa | Psicóloga en Montevideo",
-    description: "Psicóloga clínica en Montevideo. Atención individual presencial y online.",
+    title: "Lic. Josefina García da Rosa | Psicóloga en Punta del Este",
+    description: "Psicóloga clínica en Punta del Este, Maldonado y San Carlos. Atención individual presencial y online.",
     url: "https://psicologajosefina.page",
     siteName: "Psicóloga Josefina García da Rosa",
     locale: "es_UY",
