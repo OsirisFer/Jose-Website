@@ -87,96 +87,81 @@
 }
 
 .formation {
-    margin-top: 4rem;
-    padding: 3rem 3rem;
-    background-color: var(--background);
-    border-radius: 24px;
-    border: 1px solid var(--warm-peach);
-    box-shadow: 0 4px 24px rgba(61, 47, 42, 0.06);
+    margin-top: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--warm-peach);
 }
 
 .formationHeading {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: var(--wing-salmon-dark);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .formationDegrees {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 .degreeCard {
-    background-color: var(--soft-beige);
-    border: 1px solid var(--warm-peach);
-    border-radius: 16px;
-    padding: 1.75rem;
+    background-color: var(--background);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    transition: box-shadow 0.3s ease;
-}
-
-.degreeCard:hover {
-    box-shadow: 0 8px 24px rgba(61, 47, 42, 0.08);
+    gap: 0.35rem;
+    border-left: 3px solid var(--wing-salmon);
 }
 
 .degreeTag {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     color: var(--salmon);
-    background-color: var(--wing-salmon);
-    padding: 0.25rem 0.7rem;
-    border-radius: 50px;
-    width: fit-content;
-    opacity: 0.9;
 }
 
 .degreeTitle {
-    font-size: 1rem;
+    font-size: 0.92rem;
     color: var(--foreground);
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
-    font-weight: 500;
 }
 
 .degreeMeta {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--logo-gray);
     font-family: 'Inter', sans-serif;
 }
 
 .complementary {
+    padding-top: 1.5rem;
     border-top: 1px solid var(--warm-peach);
-    padding-top: 2rem;
 }
 
 .complementaryLabel {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     color: var(--wing-salmon-dark);
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .timeline {
     display: flex;
     flex-direction: column;
-    gap: 0;
     position: relative;
 }
 
 .timeline::before {
     content: '';
     position: absolute;
-    left: 3rem;
+    left: 2.6rem;
     top: 0;
     bottom: 0;
     width: 1px;
@@ -185,14 +170,14 @@
 
 .timelineItem {
     display: grid;
-    grid-template-columns: 3rem 1rem 1fr;
+    grid-template-columns: 2.6rem 0.8rem 1fr;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 0;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
 }
 
 .timelineYear {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-family: 'Inter', sans-serif;
     color: var(--logo-gray);
     font-weight: 500;
@@ -200,21 +185,20 @@
 }
 
 .timelineDot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background-color: var(--wing-salmon);
-    border: 2px solid var(--salmon-light);
+    background-color: var(--salmon-light);
     justify-self: center;
     position: relative;
     z-index: 1;
 }
 
 .timelineText {
-    font-size: 0.88rem;
+    font-size: 0.83rem;
     color: var(--foreground);
     font-family: 'Inter', sans-serif;
-    line-height: 1.5;
+    line-height: 1.45;
 }
 
 @media (max-width: 768px) {
@@ -229,13 +213,5 @@
 
     .formationDegrees {
         grid-template-columns: 1fr;
-    }
-
-    .formation {
-        padding: 2rem 1.5rem;
-    }
-
-    .timeline::before {
-        left: 2.5rem;
     }
 }
