@@ -1,6 +1,7 @@
 .services {
     background-color: var(--background);
     scroll-margin-top: 70px;
+    padding-top: 2.5rem;
 }
 
 .heading {
