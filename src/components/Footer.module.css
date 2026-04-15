@@ -42,3 +42,22 @@
     text-align: center;
     font-family: 'Inter', sans-serif;
 }
+
+.dev {
+    font-size: 0.75rem;
+    color: var(--logo-gray);
+    opacity: 0.6;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.devLink {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+    transition: opacity 0.2s;
+}
+
+.devLink:hover {
+    opacity: 1;
+}
