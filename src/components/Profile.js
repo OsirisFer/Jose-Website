@@ -48,12 +48,12 @@ export default function Profile() {
                         <div className={styles.degreeCard}>
                             <span className={styles.degreeTag}>Posgrado</span>
                             <p className={styles.degreeTitle}>Maestría Oficial Universitaria en Dirección y Gestión de Recursos Humanos</p>
-                            <p className={styles.degreeMeta}>Universidad Internacional de la Rioja (UNIR) · España · 2026–2027</p>
+                            <p className={styles.degreeMeta}>Universidad Internacional de la Rioja (UNIR) · España</p>
                         </div>
                         <div className={styles.degreeCard}>
                             <span className={styles.degreeTag}>Grado</span>
                             <p className={styles.degreeTitle}>Licenciatura en Psicología</p>
-                            <p className={styles.degreeMeta}>Instituto Universitario Francisco de Asís (UNIFA) · Maldonado · 2025</p>
+                            <p className={styles.degreeMeta}>Instituto Universitario Francisco de Asís (UNIFA) · Maldonado</p>
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@ export default function Profile() {
                             ].map((item, i) => (
                                 <div key={i} className={styles.timelineItem}>
                                     <span className={styles.timelineDot} />
-                                    <p className={styles.timelineText}>{item.text} <span className={styles.timelineYear}>({item.year})</span></p>
+                                    <p className={styles.timelineText}>{item.text}</p>
                                 </div>
                             ))}
                         </div>
