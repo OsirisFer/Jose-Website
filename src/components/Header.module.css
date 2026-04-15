@@ -57,6 +57,22 @@
     color: var(--salmon);
 }
 
+.navLinkActive {
+    color: var(--salmon);
+    position: relative;
+}
+
+.navLinkActive::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--salmon);
+    border-radius: 2px;
+}
+
 .bookBtn {
     padding: 0.5rem 1.25rem;
     font-size: 0.9rem;

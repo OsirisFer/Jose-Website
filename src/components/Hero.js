@@ -16,7 +16,7 @@ export default function Hero() {
                     <p className={styles.subtitle}>Psicología Clínica Integral</p>
                     <div className={styles.actions}>
                         <a href="#book" className="btn-primary">Reservar turno</a>
-                        <a href="#services" className={styles.learnMore}>Conocer mi enfoque</a>
+                        <a href="#services" className={styles.learnMore}>Conoce mi enfoque</a>
                     </div>
                 </div>
             </div>

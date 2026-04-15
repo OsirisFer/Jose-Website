@@ -7,6 +7,7 @@ import styles from './Header.module.css';
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState('hero');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -14,6 +15,21 @@ export default function Header() {
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const sectionIds = ['hero', 'profile', 'services', 'approach', 'contact'];
+        const observers = sectionIds.map(id => {
+            const el = document.getElementById(id);
+            if (!el) return null;
+            const observer = new IntersectionObserver(
+                ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+                { rootMargin: '-40% 0px -55% 0px' }
+            );
+            observer.observe(el);
+            return observer;
+        });
+        return () => observers.forEach(o => o && o.disconnect());
     }, []);
 
     const toggleMenu = () => {
@@ -25,11 +41,11 @@ export default function Header() {
     };
 
     const navLinks = [
-        { name: 'Inicio', href: '#hero' },
-        { name: 'Sobre Mí', href: '#profile' },
-        { name: 'Servicios', href: '#services' },
-        { name: 'Enfoque', href: '#approach' },
-        { name: 'Contacto', href: '#contact' },
+        { name: 'Inicio', href: '#hero', id: 'hero' },
+        { name: 'Sobre Mí', href: '#profile', id: 'profile' },
+        { name: 'Servicios', href: '#services', id: 'services' },
+        { name: 'Enfoque', href: '#approach', id: 'approach' },
+        { name: 'Contacto', href: '#contact', id: 'contact' },
     ];
 
     return (
@@ -45,7 +61,11 @@ export default function Header() {
                     <ul className={styles.navList}>
                         {navLinks.map((link) => (
                             <li key={link.name}>
-                                <a href={link.href} className={styles.navLink} onClick={closeMenu}>
+                                <a
+                                    href={link.href}
+                                    className={`${styles.navLink} ${activeSection === link.id ? styles.navLinkActive : ''}`}
+                                    onClick={closeMenu}
+                                >
                                     {link.name}
                                 </a>
                             </li>

@@ -39,7 +39,7 @@ export default function Footer() {
                 </div>
 
                 <p className={styles.copyright}>
-                    &copy; {currentYear} Lic. Josefina. Todos los derechos reservados.
+                    &copy; {currentYear} Lic. Josefina García da Rosa. Todos los derechos reservados.
                 </p>
 
             </div>

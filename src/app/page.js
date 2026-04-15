@@ -34,13 +34,13 @@ export default function Home() {
       <div id="hero"><Hero /></div>
       <FirmaSection />
 
-      <div id="profile"><Profile /></div>
+      <div id="profile" style={{ scrollMarginTop: '70px' }}><Profile /></div>
       <WaveDivider bg={SB} fill={BG} variant={2} flip />
 
-      <div id="services"><Services /></div>
+      <div id="services" style={{ scrollMarginTop: '70px' }}><Services /></div>
       <WaveDivider bg={BG} fill={SB} variant={3} />
 
-      <div id="approach"><TherapeuticApproach /></div>
+      <div id="approach" style={{ scrollMarginTop: '70px' }}><TherapeuticApproach /></div>
       <WaveDivider bg={SB} fill={BG} variant={1} flip />
 
       <BookingChoice

@@ -73,7 +73,7 @@ export default function BookingWizard({ patientCode, isFirstInterviewDone, onCan
                         <button onClick={onCancel} className={styles.textBtn}>✕ Cancelar</button>
                     </div>
 
-                    <p style={{ marginBottom: '1rem', color: '#666', background: '#f5f5f5', padding: '0.5rem', borderRadius: '8px', fontSize: '0.9rem' }}>
+                    <p style={{ marginBottom: '1rem', color: 'var(--foreground)', background: '#f0f0f0', padding: '0.5rem', borderRadius: '8px', fontSize: '0.9rem' }}>
                         <strong>Tipo de turno:</strong> {sessionType}
                     </p>
 
@@ -115,7 +115,7 @@ export default function BookingWizard({ patientCode, isFirstInterviewDone, onCan
                         className="btn-primary"
                         disabled={!selectedSlot}
                         onClick={handleNext}
-                        style={{ marginTop: '2rem' }}
+                        style={{ marginTop: '2rem', display: 'block', marginLeft: 'auto' }}
                     >
                         Continuar
                     </button>
@@ -160,6 +160,7 @@ export default function BookingWizard({ patientCode, isFirstInterviewDone, onCan
                             className="btn-primary"
                             disabled={!formData.name || !formData.email || loading}
                             onClick={handleSubmit}
+                            style={{  }}
                         >
                             {loading ? 'Reservando...' : 'Confirmar Reserva'}
                         </button>

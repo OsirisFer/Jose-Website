@@ -7,7 +7,7 @@ export default function Profile() {
             <div className="container">
 <div className={styles.grid}>
                     <div className={styles.bio}>
-                        <h2 className={styles.heading}>Sobre Josefina</h2>
+                        <h2 className={styles.heading}>Sobre mí</h2>
                         <p className={styles.text}>
                             Licenciada en Psicología desde un enfoque clínico integral.
                             <br />
@@ -18,10 +18,6 @@ export default function Profile() {
                             Creo que la terapia es un proceso colaborativo. Juntos, trabajamos para descubrir los patrones que ya no te sirven y construir nuevos caminos hacia una vida más auténtica y plena.
                         </p>
                         <div className={styles.credentials}>
-                            <div>
-                                <strong>Licencia</strong>
-                                <p>123456</p>
-                            </div>
                             <div>
                                 <strong>Educación</strong>
                                 <p>Lic. Psicología Clínica</p>

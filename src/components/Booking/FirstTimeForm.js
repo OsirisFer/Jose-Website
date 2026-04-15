@@ -29,11 +29,11 @@ export default function FirstTimeForm({ onBack, whatsappNumber, whatsappMessage 
 
     return (
         <div className={styles.step}>
-            <h3>Solicitar Entrevista (Primera Vez)</h3>
+            <h3 style={{ color: 'var(--wing-salmon-dark)' }}>Solicitar Entrevista (primera vez)</h3>
 
             <div className={styles.success} style={{ padding: '1rem 0' }}>
                 <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem', lineHeight: '1.6' }}>
-                    Comunicate por WhatsApp para coordinar tu <strong>entrevista de 30 minutos</strong> con Josefina — un espacio para conocerte y evaluar cómo acompañarte mejor.
+                    Comunicate por WhatsApp para coordinar tu <strong>entrevista</strong> con Josefina — un espacio para conocerte y evaluar cómo acompañarte mejor.
                 </p>
 
                 <div style={{ maxWidth: '400px', margin: '0 auto 2rem auto', textAlign: 'left' }}>

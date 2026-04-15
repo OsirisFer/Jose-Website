@@ -56,7 +56,7 @@
 
 .leftWing {
   left: 19.876%;
-  top: 18.247%;
+  top: -4%;
   width: 32.298%;
   height: 67.887%;
   transform-origin: 94% 35%;
@@ -65,7 +65,7 @@
 
 .rightWing {
   left: 47.267%;
-  top: 18.247%;
+  top: -4%;
   width: 31.242%;
   height: 67.827%;
   transform-origin: 6% 35%;
@@ -83,22 +83,33 @@
   transition: none;
 }
 
+/* Hero hover re-flap — different name forces browser to restart animation */
+.mode_hero.state_revealed:hover .leftWing {
+  animation: flapLeftHover 2.2s ease-in-out 3 both !important;
+  transition: none !important;
+}
+
+.mode_hero.state_revealed:hover .rightWing {
+  animation: flapRightHover 2.2s ease-in-out 3 both !important;
+  transition: none !important;
+}
+
 /* ── Centered mode: shift wings+jdot down 8.763% when text is hidden ── */
 /* Equalizes top/bottom space within the beige_bg rectangle            */
 .centeredMode .leftWing {
-  top: 27.010%;
+  top: 23%;
 }
 .centeredMode .rightWing {
-  top: 27.010%;
+  top: 23%;
 }
 .centeredMode .jdot {
-  top: 43.277%;
+  top: 39%;
 }
 
 /* ── jdot — floats with wrapper, never flaps ────────────────── */
 .jdot {
   left: 42.422%;
-  top: 34.514%;
+  top: 12%;
   width: 9.876%;
   height: 34.154%;
   z-index: 2;
@@ -115,6 +126,26 @@
   42%  { transform: perspective(600px) rotateY(35deg); }
   58%  { transform: perspective(600px) rotateY(-3deg); }
   72%  { transform: perspective(600px) rotateY(20deg); }
+  100% { transform: perspective(600px) rotateY(0deg); }
+}
+
+@keyframes flapLeftHover {
+  0%   { transform: perspective(600px) rotateY(0deg); }
+  12%  { transform: perspective(600px) rotateY(50deg); }
+  28%  { transform: perspective(600px) rotateY(-5deg); }
+  42%  { transform: perspective(600px) rotateY(35deg); }
+  58%  { transform: perspective(600px) rotateY(-3deg); }
+  72%  { transform: perspective(600px) rotateY(20deg); }
+  100% { transform: perspective(600px) rotateY(0deg); }
+}
+
+@keyframes flapRightHover {
+  0%   { transform: perspective(600px) rotateY(0deg); }
+  12%  { transform: perspective(600px) rotateY(-50deg); }
+  28%  { transform: perspective(600px) rotateY(5deg); }
+  42%  { transform: perspective(600px) rotateY(-35deg); }
+  58%  { transform: perspective(600px) rotateY(3deg); }
+  72%  { transform: perspective(600px) rotateY(-20deg); }
   100% { transform: perspective(600px) rotateY(0deg); }
 }
 
@@ -186,6 +217,7 @@
   animation: flapRight 2.2s ease-in-out 0.4s 3 both;
   transition: none;
 }
+
 
 /* ═══════════════════════════════════════════════════════════════
    MODE: NAVBAR

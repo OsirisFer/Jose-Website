@@ -7,7 +7,7 @@
 
 .title {
     font-size: 2rem;
-    color: var(--wing-salmon-dark);
+    color: #8b4a35;
     margin-bottom: 1rem;
 }
 
@@ -59,7 +59,7 @@
 
 .number {
     font-size: 1.25rem;
-    color: var(--wing-salmon-dark);
+    color: #8b4a35;
     font-weight: 700;
     font-family: 'Inter', sans-serif;
 }

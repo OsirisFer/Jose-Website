@@ -56,11 +56,11 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes, ca
         ? `<p>Hola <strong>${name}</strong>,</p>
            <p>Tu primera entrevista con la Lic. Josefina ha sido agendada. Es un espacio de 30 minutos para conocerte y evaluar cómo acompañarte de la mejor manera.</p>`
         : `<p>Hola <strong>${name}</strong>,</p>
-           <p>Tu sesión con la Lic. Josefina ha sido agendada correctamente.</p>`;
+           <p>Tu sesión con la Lic. Josefina García da Rosa ha sido agendada correctamente.</p>`;
 
     const htmlContent = `
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fdfcf8;">
-        <h2 style="color: #2c2420;">${isFirstInterview ? 'Primera Entrevista Confirmada' : '¡Reserva Confirmada!'}</h2>
+        <h2 style="color: #2c2420;">${isFirstInterview ? 'Primera Entrevista Confirmada' : '¡Reserva confirmada!'}</h2>
         ${bodyContent}
 
         <div style="background: #f5f0eb; padding: 20px; border-radius: 12px; margin: 20px 0;">
@@ -87,7 +87,7 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes, ca
         to,
         subject: isFirstInterview
             ? `Primera Entrevista Confirmada - ${formattedDate}`
-            : `Confirmación de Sesión - ${formattedDate}`,
+            : `Confirmación de sesión - ${formattedDate}`,
         html: htmlContent,
     });
 }
@@ -103,7 +103,7 @@ async function sendNotificationEmail({ name, email, phone, date, time, durationM
 
     const html = `
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fdfcf8;">
-        <h2 style="color: #2c2420;">Nueva Reserva Recibida</h2>
+        <h2 style="color: #2c2420;">Nueva reserva recibida</h2>
         <p>Se agendó un nuevo turno desde el sitio web.</p>
 
         <div style="background: #f5f0eb; padding: 20px; border-radius: 12px; margin: 20px 0;">
@@ -126,7 +126,7 @@ async function sendNotificationEmail({ name, email, phone, date, time, durationM
     await transporter.sendMail({
         from: `"Sistema de Reservas" <${process.env.SMTP_USER}>`,
         to: notificationTo,
-        subject: `Nueva Reserva: ${name} — ${formattedDate} ${time}hs`,
+        subject: `Nueva reserva: ${name} — ${formattedDate} ${time}hs`,
         html,
     });
 }

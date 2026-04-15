@@ -1,12 +1,13 @@
 .services {
     background-color: var(--background);
+    scroll-margin-top: 70px;
 }
 
 .heading {
     font-size: 2.5rem;
     margin-bottom: 3rem;
     text-align: center;
-    color: var(--logo-gray);
+    color: var(--wing-salmon-dark);
 }
 
 .grid {

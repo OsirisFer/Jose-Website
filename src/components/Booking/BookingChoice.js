@@ -39,7 +39,7 @@ export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
                                     className={styles.choiceBtn}
                                     onClick={() => setMode('FIRST_TIME')}
                                 >
-                                    <strong>Primera Vez</strong>
+                                    <strong>Primera vez</strong>
                                     <small>Solicitar entrevista</small>
                                 </button>
 

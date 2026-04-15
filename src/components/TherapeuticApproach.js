@@ -7,10 +7,10 @@ export default function TherapeuticApproach() {
                 <div className={styles.content}>
                     <h2 className={styles.heading}>Mi Enfoque</h2>
                     <p className={styles.text}>
-                        Mi enfoque es <strong>integral</strong> — entiendo a cada persona desde su historia, sus vínculos y su contexto, sin reducir el malestar a una sola causa.
+                        Mi enfoque es <strong style={{ color: 'var(--wing-salmon-dark)' }}>integral</strong> — entiendo a cada persona desde su historia, sus vínculos y su contexto, sin reducir el malestar a una sola causa.
                     </p>
                     <p className={styles.text}>
-                        Trabajo desde una mirada que contempla la dimensión emocional, cognitiva y relacional de cada proceso, acompañando a cada persona de forma personalizada, a su ritmo y desde el respeto por su singularidad.
+                        Trabajo desde una mirada que contempla la dimensión emocional, cognitiva y relacional de cada proceso, con un acompañamiento personalizado y desde el respeto por la singularidad.
                     </p>
                     <div className={styles.tags}>
                         <span className={styles.tag}>Empatía</span>
