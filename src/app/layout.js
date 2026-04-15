@@ -15,13 +15,22 @@ const youngSerif = Young_Serif({
 });
 
 export const metadata = {
-  title: "Josefina | Licensed Psychologist",
-  description: "Professional psychology consultations for mental well-being in a calm, supportive environment.",
+  title: "Lic. Josefina García da Rosa | Psicóloga en Montevideo",
+  description: "Psicóloga clínica en Montevideo. Atención individual presencial y online. Primera entrevista sin compromiso. Agendá tu turno.",
+  keywords: "psicóloga Montevideo, psicología clínica, terapia individual, salud mental Uruguay, Josefina García da Rosa",
+  openGraph: {
+    title: "Lic. Josefina García da Rosa | Psicóloga en Montevideo",
+    description: "Psicóloga clínica en Montevideo. Atención individual presencial y online.",
+    url: "https://psicologajosefina.page",
+    siteName: "Psicóloga Josefina García da Rosa",
+    locale: "es_UY",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body className={`${inter.variable} ${youngSerif.variable}`}>
         {children}
       </body>
