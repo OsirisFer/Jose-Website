@@ -123,6 +123,8 @@ export default function AnimatedLogo({ mode = 'hero', className = '', hideText =
       style={parallaxStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      role="img"
+      aria-label="Logo de Josefina García da Rosa — mariposa con inicial J"
     >
       <img
         className={styles.beigebg}
@@ -150,7 +152,8 @@ export default function AnimatedLogo({ mode = 'hero', className = '', hideText =
         <img
           className={styles.jdot}
           src="/logo/jdot.webp"
-          alt="GdRD"
+          alt=""
+          aria-hidden="true"
           draggable={false}
         />
       </div>
