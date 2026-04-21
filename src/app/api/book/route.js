@@ -188,7 +188,7 @@ export async function POST(request) {
 
         const { calendar, auth } = await getCalendarService();
 
-        const startDateTime = new Date(`${date}T${time}:00`);
+        const startDateTime = new Date(`${date}T${time}:00-03:00`);
         const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000);
 
         // Double booking check
