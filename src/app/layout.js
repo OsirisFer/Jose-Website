@@ -16,6 +16,10 @@ const youngSerif = Young_Serif({
 });
 
 export const metadata = {
+  metadataBase: new URL('https://www.psicologajosefina.page'),
+  alternates: {
+    canonical: '/',
+  },
   verification: {
     google: 'lQYjnClZB5qJVt-DT3QsJ7bYoYpMsKQkTPZ4c6HdUno',
   },
