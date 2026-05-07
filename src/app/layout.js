@@ -29,7 +29,7 @@ export const metadata = {
   openGraph: {
     title: "Lic. Josefina García da Rosa | Psicóloga en Maldonado",
     description: "Psicóloga clínica en Maldonado, Punta del Este y San Carlos. Atención individual presencial y online.",
-    url: "https://psicologajosefina.page",
+    url: "https://www.psicologajosefina.page",
     siteName: "Psicóloga Josefina García da Rosa",
     locale: "es_UY",
     type: "website",
