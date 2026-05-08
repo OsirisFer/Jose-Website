@@ -1,6 +1,6 @@
 .hero {
     background-color: var(--background);
-    padding: 3rem 0 2rem;
+    padding: 5rem 0 2rem;
     display: flex;
     align-items: center;
     min-height: auto;
@@ -31,7 +31,7 @@
     align-items: center;
     gap: 1.25rem;
     max-width: 640px;
-    margin-top: -3rem;
+    margin-top: -2rem;
 }
 
 .title {
