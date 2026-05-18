@@ -49,8 +49,8 @@ export async function GET(request) {
             durationMinutes = 30;
         }
 
-        const startOfDay = new Date(`${dateParam}T00:00:00`);
-        const endOfDay = new Date(`${dateParam}T23:59:59`);
+        const startOfDay = new Date(`${dateParam}T00:00:00-03:00`);
+        const endOfDay = new Date(`${dateParam}T23:59:59-03:00`);
 
         const timeMin = startOfDay.toISOString();
         const timeMax = endOfDay.toISOString();
@@ -73,10 +73,10 @@ export async function GET(request) {
             return NextResponse.json({ slots: [], duration: durationMinutes });
         }
 
-        const workStart = new Date(`${dateParam}T${schedule.start}:00`);
-        const workEnd   = new Date(`${dateParam}T${schedule.end}:00`);
-        const lunchStart = schedule.lunchStart ? new Date(`${dateParam}T${schedule.lunchStart}:00`) : null;
-        const lunchEnd   = schedule.lunchEnd   ? new Date(`${dateParam}T${schedule.lunchEnd}:00`)   : null;
+        const workStart = new Date(`${dateParam}T${schedule.start}:00-03:00`);
+        const workEnd   = new Date(`${dateParam}T${schedule.end}:00-03:00`);
+        const lunchStart = schedule.lunchStart ? new Date(`${dateParam}T${schedule.lunchStart}:00-03:00`) : null;
+        const lunchEnd   = schedule.lunchEnd   ? new Date(`${dateParam}T${schedule.lunchEnd}:00-03:00`)   : null;
 
         let currentSlot = new Date(workStart);
 
