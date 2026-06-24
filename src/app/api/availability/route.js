@@ -78,11 +78,20 @@ export async function GET(request) {
         const lunchStart = schedule.lunchStart ? new Date(`${dateParam}T${schedule.lunchStart}:00-03:00`) : null;
         const lunchEnd   = schedule.lunchEnd   ? new Date(`${dateParam}T${schedule.lunchEnd}:00-03:00`)   : null;
 
+        const now = new Date();
+        const isToday = dateParam === now.toLocaleDateString('en-CA', { timeZone: 'America/Montevideo' });
+
         let currentSlot = new Date(workStart);
 
         while (currentSlot < workEnd) {
             const slotEnd = new Date(currentSlot.getTime() + durationMinutes * 60000);
             if (slotEnd > workEnd) break;
+
+            // Skip slots already past (only relevant when booking for today)
+            if (isToday && slotEnd <= now) {
+                currentSlot = new Date(currentSlot.getTime() + 30 * 60000);
+                continue;
+            }
 
             // Skip lunch break
             const overlapsLunch = lunchStart && lunchEnd &&
