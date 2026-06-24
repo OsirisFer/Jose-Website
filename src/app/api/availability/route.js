@@ -96,7 +96,14 @@ export async function GET(request) {
             });
 
             if (!overlapsLunch && !isBusy) {
-                availableSlots.push(currentSlot.toTimeString().slice(0, 5));
+                availableSlots.push(
+                    currentSlot.toLocaleTimeString('es-UY', {
+                        timeZone: 'America/Montevideo',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                    })
+                );
             }
 
             currentSlot = new Date(currentSlot.getTime() + 30 * 60000);
