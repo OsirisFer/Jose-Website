@@ -1,0 +1,58 @@
+.weekGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.dayColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #faf6f1;
+    border-radius: 12px;
+    padding: 0.75rem 0.5rem;
+    min-height: 200px;
+}
+
+.dayHeader {
+    text-align: center;
+    font-family: 'Young Serif', serif;
+    color: #8b4a35;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--soft-beige);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.daySlots {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.daySlots button {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.3rem;
+}
+
+.empty {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.8rem;
+    margin: 1rem 0;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .weekGrid {
+        grid-template-columns: 1fr;
+    }
+    .dayColumn {
+        min-height: auto;
+    }
+    .daySlots {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+}

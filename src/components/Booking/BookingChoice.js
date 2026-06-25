@@ -2,20 +2,35 @@
 
 import { useState } from 'react';
 import BookingWizard from './BookingWizard';
+import RecurringWizard from './RecurringWizard';
+import RecurringManagement from './RecurringManagement';
+import BookingTypeSelector from './BookingTypeSelector';
 import FirstTimeForm from './FirstTimeForm';
 import BookingCodeInput from './BookingCodeInput';
 import styles from './BookingWizard.module.css';
 
 export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
-    const [mode, setMode] = useState('LANDING'); // LANDING, FIRST_TIME, CODE_ENTRY, BOOKING
+    // LANDING | FIRST_TIME | CODE_ENTRY | TYPE_SELECTOR | BOOKING | RECURRING | MANAGE_RECURRING
+    const [mode, setMode] = useState('LANDING');
     const [patientCode, setPatientCode] = useState(null);
     const [isFirstInterviewDone, setIsFirstInterviewDone] = useState(true);
+    const [recurring, setRecurring] = useState(null);
 
-
-    const handlePatientCodeValid = (code, firstInterviewDone) => {
+    const handlePatientCodeValid = (code, firstInterviewDone, recurringSchedule) => {
         setPatientCode(code);
         setIsFirstInterviewDone(firstInterviewDone);
-        setMode('BOOKING');
+        setRecurring(recurringSchedule || null);
+        if (recurringSchedule) {
+            setMode('MANAGE_RECURRING');
+        } else {
+            setMode('TYPE_SELECTOR');
+        }
+    };
+
+    const resetToLanding = () => {
+        setMode('LANDING');
+        setPatientCode(null);
+        setRecurring(null);
     };
 
     return (
@@ -28,7 +43,6 @@ export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
 
                 <div className={styles.wizard}>
 
-                    {/* INITIAL CHOICE SCREEN */}
                     {mode === 'LANDING' && (
                         <div className={styles.choiceContainer}>
                             <p className={styles.subtitle} style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -54,7 +68,6 @@ export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
                         </div>
                     )}
 
-                    {/* FIRST TIME FLOW */}
                     {mode === 'FIRST_TIME' && (
                         <FirstTimeForm
                             onBack={() => setMode('LANDING')}
@@ -63,7 +76,6 @@ export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
                         />
                     )}
 
-                    {/* EXISTING PATIENT: CODE ENTRY */}
                     {mode === 'CODE_ENTRY' && (
                         <BookingCodeInput
                             onValidCode={handlePatientCodeValid}
@@ -71,15 +83,43 @@ export default function BookingChoice({ whatsappNumber, whatsappMessage }) {
                         />
                     )}
 
-                    {/* EXISTING PATIENT: BOOKING WIZARD */}
+                    {mode === 'TYPE_SELECTOR' && (
+                        <BookingTypeSelector
+                            onChooseSingle={() => setMode('BOOKING')}
+                            onChooseRecurring={() => setMode('RECURRING')}
+                            onCancel={resetToLanding}
+                        />
+                    )}
+
                     {mode === 'BOOKING' && (
                         <BookingWizard
                             patientCode={patientCode}
-                            isFirstInterviewDone={isFirstInterviewDone} // Pass prop
-                            onCancel={() => {
-                                setMode('LANDING');
-                                setPatientCode(null);
+                            isFirstInterviewDone={isFirstInterviewDone}
+                            onCancel={resetToLanding}
+                        />
+                    )}
+
+                    {mode === 'RECURRING' && (
+                        <RecurringWizard
+                            patientCode={patientCode}
+                            onCancel={resetToLanding}
+                            onBackToTypeSelector={() => setMode('TYPE_SELECTOR')}
+                        />
+                    )}
+
+                    {mode === 'MANAGE_RECURRING' && recurring && (
+                        <RecurringManagement
+                            patientCode={patientCode}
+                            recurring={recurring}
+                            onCancelled={() => {
+                                setRecurring(null);
+                                setMode('TYPE_SELECTOR');
                             }}
+                            onModified={() => {
+                                setRecurring(null);
+                                setMode('RECURRING');
+                            }}
+                            onCancel={resetToLanding}
                         />
                     )}
 

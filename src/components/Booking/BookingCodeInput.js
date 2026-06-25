@@ -21,8 +21,7 @@ export default function BookingCodeInput({ onValidCode, onBack }) {
             const data = await res.json();
 
             if (res.ok && data.valid) {
-                // Pass pure code + status
-                onValidCode(code, data.firstInterviewDone);
+                onValidCode(code, data.firstInterviewDone, data.recurring || null);
             } else {
                 setError('Código inválido o inactivo. Intenta nuevamente.');
             }

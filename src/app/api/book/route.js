@@ -2,20 +2,8 @@ import { NextResponse } from "next/server";
 import { getCalendarService } from "@/lib/google";
 import { validatePatientCode, markFirstInterviewDone, updatePatientBookingData } from "@/lib/sheets";
 import { checkRateLimit, isBlacklisted, extractIp, isValidOrigin, isValidDate, isValidTime, escapeHtml } from "@/lib/security";
+import { sendEmail } from "@/lib/email";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
-
-function createTransporter() {
-    return nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || "587"),
-        secure: process.env.SMTP_PORT === "465",
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        },
-    });
-}
 
 function formatDate(date, time) {
     return new Date(`${date}T${time}:00`).toLocaleDateString('es-UY', {
@@ -47,7 +35,6 @@ function generateGoogleCalendarLink({ date, time, durationMinutes, sessionType }
 }
 
 async function sendConfirmationEmail({ to, name, date, time, durationMinutes, calendarLink }) {
-    const transporter = createTransporter();
     const formattedDate = formatDate(date, time);
     const isFirstInterview = durationMinutes === 30;
     const sessionType = isFirstInterview ? "Primera Entrevista (30 min)" : "Sesión (60 min)";
@@ -82,8 +69,7 @@ async function sendConfirmationEmail({ to, name, date, time, durationMinutes, ca
     </div>
     `;
 
-    await transporter.sendMail({
-        from: `"Lic. Josefina" <${process.env.SMTP_USER}>`,
+    await sendEmail({
         to,
         subject: isFirstInterview
             ? `Primera Entrevista Confirmada - ${formattedDate}`
@@ -96,7 +82,6 @@ async function sendNotificationEmail({ name, email, phone, date, time, durationM
     const notificationTo = process.env.NOTIFICATION_EMAIL_TO;
     if (!notificationTo) return;
 
-    const transporter = createTransporter();
     const isFirstInterview = durationMinutes === 30;
     const sessionType = isFirstInterview ? "Primera Entrevista (30 min)" : "Sesión (60 min)";
     const formattedDate = formatDate(date, time);
@@ -123,11 +108,11 @@ async function sendNotificationEmail({ name, email, phone, date, time, durationM
     </div>
     `;
 
-    await transporter.sendMail({
-        from: `"Sistema de Reservas" <${process.env.SMTP_USER}>`,
+    await sendEmail({
         to: notificationTo,
         subject: `Nueva reserva: ${name} — ${formattedDate} ${time}hs`,
         html,
+        replyTo: email,
     });
 }
 

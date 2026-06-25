@@ -27,7 +27,8 @@ async function getPatientData() {
     const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
     // A=Código, B=Activo, C=Nombre, D=Primera Entrevista, E=Notas
     // F=Modalidad, G=Email, H=Teléfono, I=Total Sesiones, J=Última Sesión
-    const RANGE = "Patients!A:J";
+    // K=Horario Fijo, L=Día Fijo, M=Hora Fija, N=Event ID
+    const RANGE = "Patients!A:N";
 
     if (!SHEET_ID) {
         throw new Error("GOOGLE_SHEETS_ID not set");
@@ -60,13 +61,21 @@ async function getPatientData() {
 
         const sessionCount = parseInt(row[8]) || 0; // col I
 
+        const recurringRaw = row[10]; // col K
+        const hasRecurring = recurringRaw === true || String(recurringRaw).toUpperCase() === "TRUE";
+
         const absoluteRow = startIndex + index + 1;
 
         patients[code] = {
             active: isActive,
             firstInterviewDone: isDone,
             sessionCount,
-            rowIndex: absoluteRow
+            rowIndex: absoluteRow,
+            recurring: hasRecurring ? {
+                day: row[11] || '',      // col L
+                time: row[12] || '',     // col M
+                eventId: row[13] || '',  // col N
+            } : null,
         };
     });
 
@@ -83,8 +92,69 @@ export async function validatePatientCode(code) {
 
     return {
         valid: true,
-        firstInterviewDone: data.firstInterviewDone
+        firstInterviewDone: data.firstInterviewDone,
+        recurring: data.recurring,
     };
+}
+
+export async function setRecurringSchedule(code, { day, time, eventId }) {
+    if (!code) return;
+    const patients = await getPatientData();
+    const data = patients[String(code).trim().toUpperCase()];
+    if (!data) return;
+
+    const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
+    const sheets = await getSheetsClient();
+    const row = data.rowIndex;
+
+    // K must use USER_ENTERED so it lands as a real boolean for the checkbox.
+    // L/M/N use RAW to prevent Sheets from re-interpreting "09:00" as a time value.
+    await sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: SHEET_ID,
+        requestBody: {
+            valueInputOption: "USER_ENTERED",
+            data: [{ range: `Patients!K${row}`, values: [[true]] }]
+        }
+    });
+    await sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: SHEET_ID,
+        requestBody: {
+            valueInputOption: "RAW",
+            data: [
+                { range: `Patients!L${row}`, values: [[day]] },
+                { range: `Patients!M${row}`, values: [[time]] },
+                { range: `Patients!N${row}`, values: [[eventId]] },
+            ]
+        }
+    });
+
+    cache = { data: null, timestamp: 0 };
+}
+
+export async function clearRecurringSchedule(code) {
+    if (!code) return;
+    const patients = await getPatientData();
+    const data = patients[String(code).trim().toUpperCase()];
+    if (!data) return;
+
+    const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
+    const sheets = await getSheetsClient();
+    const row = data.rowIndex;
+
+    await sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: SHEET_ID,
+        requestBody: {
+            valueInputOption: "USER_ENTERED",
+            data: [
+                { range: `Patients!K${row}`, values: [[false]] },
+                { range: `Patients!L${row}`, values: [[""]] },
+                { range: `Patients!M${row}`, values: [[""]] },
+                { range: `Patients!N${row}`, values: [[""]] },
+            ]
+        }
+    });
+
+    cache = { data: null, timestamp: 0 };
 }
 
 export async function markFirstInterviewDone(code) {
@@ -144,6 +214,34 @@ export async function getScheduleForDate(dateStr) {
 function resolveDay(schedule, dateStr) {
     const dayName = DAY_NAMES[new Date(`${dateStr}T12:00:00`).getDay()];
     return schedule[dayName] || { active: false, start: '09:00', end: '18:00' };
+}
+
+// Returns the full weekly schedule (Lun-Vie) for the recurring booking flow
+export async function getWeeklySchedule() {
+    const now = Date.now();
+    if (!scheduleCache.data || now - scheduleCache.timestamp >= SCHEDULE_CACHE_TTL) {
+        const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
+        const sheets = await getSheetsClient();
+        const response = await sheets.spreadsheets.values.get({
+            spreadsheetId: SHEET_ID,
+            range: 'Horarios!A2:F8',
+        });
+        const rows = response.data.values || [];
+        const schedule = {};
+        rows.forEach(row => {
+            const day = (row[0] || '').trim();
+            const activeRaw = row[3];
+            schedule[day] = {
+                start:       row[1] || '09:00',
+                end:         row[2] || '18:00',
+                active:      activeRaw === true || String(activeRaw).toUpperCase() === 'TRUE',
+                lunchStart:  row[4] || null,
+                lunchEnd:    row[5] || null,
+            };
+        });
+        scheduleCache = { data: schedule, timestamp: now };
+    }
+    return scheduleCache.data;
 }
 
 // Auto-fill contact info + increment session count + update last session date

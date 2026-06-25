@@ -33,6 +33,7 @@ export async function POST(request) {
         return NextResponse.json({
             ok: true,
             firstInterviewDone: !!result.firstInterviewDone,
+            recurring: result.recurring || null,
             // optional backward compatibility:
             valid: true,
         });
