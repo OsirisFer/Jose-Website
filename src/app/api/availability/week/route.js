@@ -11,13 +11,14 @@ function addDays(dateStr, days) {
     return d.toLocaleDateString('en-CA', { timeZone: 'America/Montevideo' });
 }
 
-// Returns the Monday of the week following the given date (Uruguay timezone)
-function getNextMondayDate(fromDateStr) {
-    const d = new Date(`${fromDateStr}T12:00:00-03:00`);
-    const day = d.getDay(); // 0=Sun ... 6=Sat
-    const daysUntilNextMonday = day === 0 ? 1 : (8 - day);
-    d.setDate(d.getDate() + daysUntilNextMonday);
-    return d.toLocaleDateString('en-CA', { timeZone: 'America/Montevideo' });
+// Returns the date (YYYY-MM-DD UY) of this week's occurrence of the given JS weekday
+// jsDayIdx: 1=Mon, 2=Tue, ..., 5=Fri
+function getThisWeekDate(todayUYStr, jsDayIdx) {
+    const today = new Date(`${todayUYStr}T12:00:00-03:00`);
+    const todayJsDay = today.getDay();
+    const diff = jsDayIdx - todayJsDay;
+    today.setDate(today.getDate() + diff);
+    return today.toLocaleDateString('en-CA', { timeZone: 'America/Montevideo' });
 }
 
 function formatTime(date) {
@@ -86,10 +87,8 @@ export async function GET(request) {
     }
 
     try {
-        // Use the next Monday as starting point — first occurrence of any recurring event
-        const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Montevideo' });
-        const firstMonday = getNextMondayDate(todayStr);
-        const secondMonday = addDays(firstMonday, 7);
+        const now = new Date();
+        const todayUYStr = now.toLocaleDateString('en-CA', { timeZone: 'America/Montevideo' });
 
         const { calendar, auth } = await getCalendarService();
         const schedule = await getWeeklySchedule();
@@ -97,10 +96,10 @@ export async function GET(request) {
         // Recurring is always 60 minutes (only standard sessions can be recurring)
         const durationMinutes = 60;
 
-        // Query freebusy for a 14-day window covering both weeks
-        const timeMin = new Date(`${firstMonday}T00:00:00-03:00`).toISOString();
-        const timeMaxDate = new Date(`${secondMonday}T23:59:59-03:00`);
-        timeMaxDate.setDate(timeMaxDate.getDate() + 4); // through Friday of second week
+        // Query freebusy for the next ~14 days to cover first and second occurrences
+        const timeMin = new Date(`${todayUYStr}T00:00:00-03:00`).toISOString();
+        const timeMaxDate = new Date(`${todayUYStr}T23:59:59-03:00`);
+        timeMaxDate.setDate(timeMaxDate.getDate() + 14);
         const timeMax = timeMaxDate.toISOString();
 
         const freebusy = await calendar.freebusy.query({
@@ -114,30 +113,46 @@ export async function GET(request) {
         const allBusy = freebusy.data.calendars[CALENDAR_ID].busy || [];
 
         const result = WEEKDAYS.map((dayName, i) => {
-            const dateWeek1 = addDays(firstMonday, i);
-            const dateWeek2 = addDays(secondMonday, i);
+            const jsDayIdx = i + 1; // Lunes=1, Martes=2, ... Viernes=5
+            const thisWeekDate = getThisWeekDate(todayUYStr, jsDayIdx);
+
+            // First occurrence: this week if today or in the future, else next week
+            const firstDate = thisWeekDate >= todayUYStr
+                ? thisWeekDate
+                : addDays(thisWeekDate, 7);
+            const secondDate = addDays(firstDate, 7);
+
             const daySchedule = schedule[dayName] || { active: false };
 
-            const slotsWeek1 = computeDaySlots({
-                dateStr: dateWeek1, daySchedule, busySlots: allBusy, durationMinutes
+            let slotsFirst = computeDaySlots({
+                dateStr: firstDate, daySchedule, busySlots: allBusy, durationMinutes
             });
-            const slotsWeek2 = computeDaySlots({
-                dateStr: dateWeek2, daySchedule, busySlots: allBusy, durationMinutes
+            const slotsSecond = computeDaySlots({
+                dateStr: secondDate, daySchedule, busySlots: allBusy, durationMinutes
             });
 
-            // Only slots that are free in BOTH weeks survive
-            const safeSet = new Set(slotsWeek2);
-            const slots = slotsWeek1.filter(s => safeSet.has(s));
+            // If the first occurrence is today, hide slots whose end already passed
+            if (firstDate === todayUYStr) {
+                slotsFirst = slotsFirst.filter(slot => {
+                    const slotStart = new Date(`${firstDate}T${slot}:00-03:00`);
+                    const slotEnd = new Date(slotStart.getTime() + durationMinutes * 60000);
+                    return slotEnd > now;
+                });
+            }
+
+            // Only slots free in BOTH first and second weeks survive
+            const safeSet = new Set(slotsSecond);
+            const slots = slotsFirst.filter(s => safeSet.has(s));
 
             return {
                 day: dayName,
-                date: dateWeek1, // first occurrence date
+                date: firstDate,
                 active: daySchedule.active,
                 slots,
             };
         });
 
-        return NextResponse.json({ days: result, firstOccurrenceWeekStart: firstMonday });
+        return NextResponse.json({ days: result });
 
     } catch (error) {
         console.error('Weekly availability error:', error);
